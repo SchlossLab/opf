@@ -1,11 +1,14 @@
 '''
-USAGE: ./makeOPFs genes.faa [BLAST path] [mothur path]
+USAGE: ./makeOPFs genes.faa [options]
 '''
 
 import os
 import sys
 import argparse
 import multiprocessing
+from __future__ import division
+import math as m
+from collections import defaultdict
 
 def which(program):
 	'''from https://stackoverflow.com/questions/377017/test-if-executable-exists-in-python'''
@@ -24,6 +27,75 @@ def which(program):
                 return exe_file
 
     return None
+
+def get_next_fasta (fileObject):
+    '''usage: for header, seq in get_next_fasta(fileObject):
+    '''
+    header = ''
+    seq = ''
+
+    #The following for loop gets the header of the first fasta
+    #record. Skips any leading junk in the file
+    for line in fileObject:
+        if line.startswith('>'):
+            header = line.strip()
+            break
+
+    for line in fileObject:
+        if line.startswith('>'):
+            yield header, seq
+            header = line.strip()
+            seq = ''
+        else:
+            seq += line.strip()
+    #yield the last entry
+    if header:
+        yield header, seq
+
+def make_count_file(filelist, fasta, outfile):
+	countdict = defaultdict(int)
+	groupdict = {}
+
+	#list of files output from bowtie
+	for file in filelist:
+	    group = file.split(".")[0]
+	    infile = open(file, 'r')
+	    for line in infile:
+	        line = line.strip()
+	        line = line.split("\t")
+	        gene = line[0].strip()
+	        if gene != "*":
+	            reads = int(line[2])
+	            countdict[gene] += reads
+	    groupdict[group] = countdict
+	    countdict = defaultdict(int)
+	    infile.close()
+
+	groups = groupdict.keys()
+	print groups
+
+	numBases = 100
+
+	outfile = open(outfile, 'w')
+
+	outfile.write("Representative_Sequence\ttotal\t%s\n" % '\t'.join(groups) )
+
+	for header, seq in get_next_fasta(fasta):
+	    #header = header.split(" ")
+	    #header = header[0]
+	    totalreads = 0
+	    groupcounts = []
+	    for group in groups: #need to maintain same order from above
+	        groupcounts.append(groupdict[group][header[1:]]) #list of counts for that gene (header)
+	        totalreads = totalreads + groupdict[group][header[1:]] #this is the count of reads to that gene total
+
+	    length = len(seq)
+	    if totalreads == 0:
+	        continue
+	    totalreads = totalreads * numBases #normalize to number of bases
+	    #num = int( m.ceil(totalreads/len(seq) ) )
+	    groupcounts[:] = [int(m.ceil((x*numBases)/len(seq))) for x in groupcounts]
+	    outfile.write("%s\t%s\t%s\n" % (header[1:], sum(groupcounts), '\t'.join(map(str, groupcounts) ) ) )
 
 
 parser = argparse.ArgumentParser(description='make OPFs from a fasta file of genes')
@@ -57,6 +129,10 @@ if args.calc_counts == True and args.bowtie2 == None or args.botie2-build == Non
 	print "bowtie2-build: ", args.bowtie2-build
 	sys.exit(1)
 
+if args.calc_counts == True and args.reads == '':
+	print "--reads required with --calc_counts option"
+	sys.exit(1)
+
 ##allvall blast
 if args.nproc == 'all'
 	args.nproc = multiprocessing.cpu_count()
@@ -65,6 +141,8 @@ else:
 	args.nproc = int(args.nproc)
 
 gene_base = args.genes.split('.')[0]
+
+
 
 ##build blast db
 cmd = "{2} -in {0} -dbtype prot -out {1}.blastDB".format(args.genes, gene_base, args.blastdb)
@@ -77,6 +155,9 @@ cmd = "{4} -query {0} -db {1}.blastDB -out {1}.blastout -evalue 1e-5 -outfmt 6 -
 if args.calc_count:
 	cmd = "{0} {1} {1}.bowtie2db".format(args.bowtie2-build, args.genes, gene_base)
 	cmd = "{0} {1}.bowtie2db -f {2} -p {3} -S reads.aligned2{1}.sam".format(args.bowtie2, genes_base, args.reads, args.nproc)
+	bowtieout = []
+	nuc_genes = ''
+	make_count_file(bowtieout, nuc_genes, "{0}.count".format(gene_base))
 
 ##run mothur
 
