@@ -100,6 +100,7 @@ def make_count_file(filelist, fasta, outfile):
 
 parser = argparse.ArgumentParser(description='make OPFs from a fasta file of genes')
 parser.add_argument('genes', nargs='+')
+parser.add_argument('--nuc_genes', default='', help='path to nucleotide genes fasta, for use with --calc_counts')
 parser.add_argument('--blast', default=which('blastp'), help='path to BLAST')
 parser.add_argument('--blastdb', default=which('makeblastdb'), help='path to BLAST')
 parser.add_argument('--mothur', default=which('mothur'), help='path to mothur')
@@ -156,8 +157,7 @@ if args.calc_count:
 	cmd = "{0} {1} {1}.bowtie2db".format(args.bowtie2-build, args.genes, gene_base)
 	cmd = "{0} {1}.bowtie2db -f {2} -p {3} -S reads.aligned2{1}.sam".format(args.bowtie2, genes_base, args.reads, args.nproc)
 	bowtieout = []
-	nuc_genes = ''
-	make_count_file(bowtieout, nuc_genes, "{0}.count".format(gene_base))
+	make_count_file(bowtieout, args.nuc_genes, "{0}.count".format(gene_base))
 
 ##run mothur
 
