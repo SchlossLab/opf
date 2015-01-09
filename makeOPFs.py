@@ -157,8 +157,13 @@ if args.calc_count:
 	cmd = "{0} {1} {1}.bowtie2db".format(args.bowtie2-build, args.genes, gene_base)
 	cmd = "{0} {1}.bowtie2db -f {2} -p {3} -S reads.aligned2{1}.sam".format(args.bowtie2, genes_base, args.reads, args.nproc)
 	bowtieout = []
-	make_count_file(bowtieout, args.nuc_genes, "{0}.count".format(gene_base))
+	countfile = "{0}.count".format(gene_base)
+	make_count_file(bowtieout, args.nuc_genes, countfile)
+
+else:
+	"{0} '#count.seqs()'".format(args.mothur)
+
 
 ##run mothur
 
-cmd = "{0} '#mgcluster()'".format(args.mothur)
+cmd = "{0} '#mgcluster(blast={1}, count={2})'".format(args.mothur, blastout, countfile)
