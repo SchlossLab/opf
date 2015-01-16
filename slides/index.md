@@ -14,9 +14,9 @@ knit        : slidify::knit2slides
 
 ## OPFs
 
-Operational protein families are clusters of similar proteins at the sequence level
+Operational protein families are clusters of similar proteins at the aa sequence level
 
-
+Creating OPFs is a database free method of grouping sequences
 
 --- .class #id 
 
@@ -26,6 +26,17 @@ Operational protein families are clusters of similar proteins at the sequence le
 
 2. Cluster
 
+
+---
+
+## Clustering algos 
+
+* *neighbor algorithms
+* k-means
+
+---
+
+## 
 
 ---
 
