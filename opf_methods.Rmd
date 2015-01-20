@@ -63,6 +63,30 @@ done
 
 This will zip the raw fasta files and save the md5sums to validate the download. 
 
+File list:
+```
+mgm4474351.3    mgm4474351.3.050.upload.fna	050.1	9ae1567e29c92695d4dba87368d48c91	2725914863
+mgm4467109.3	mgm4467109.3.050.upload.fna	050.1	585207b8d1ed08054f64d83e2ea2c4b5	11994956359
+mgm4466188.3	mgm4466188.3.050.upload.fna	050.1	06d134cc37353ae4ad61a114f864a680	16364852358
+mgm4474355.3	mgm4474355.3.050.upload.fna	050.1	880b848b7b43042196121024ab84a226	2897033362
+mgm4474361.3	mgm4474361.3.050.upload.fna	050.1	629cd1f2459d20ea17c2520191eb70d3	2216895877
+mgm4466296.3	mgm4466296.3.050.upload.fna	050.1	835d93b4898cedba6fda521558f36b8c	17698558630
+mgm4474805.3	mgm4474805.3.050.upload.fna	050.1	c2b677e9fdf510994a938ad40caeaaa1	2863660233
+mgm4466602.3	mgm4466602.3.050.upload.fna	050.1	374d849ad2cf90d6cc0dd73f4406be41	17061324126
+mgm4474369.3	mgm4474369.3.050.upload.fna	050.1	b6076f12d6e14386dcd907c7d743d06e	2856542403
+mgm4474352.3	mgm4474352.3.050.upload.fna	050.1	b96c0fe18613e766ab05bd86aea11ae3	1846447145
+mgm4466257.3	mgm4466257.3.050.upload.fna	050.1	b4106a991a7ed7b4ea2a74b5b4c7183b	12188538201
+mgm4474360.3	mgm4474360.3.050.upload.fna	050.1	cf599631d45f0618d43232a57f616d7c	2845729091
+mgm4466194.3	mgm4466194.3.050.upload.fna	050.1	d51674481f637a48bf5a430fd6c2b507	12063818770
+mgm4474358.3	mgm4474358.3.050.upload.fna	050.1	01d8bcc929984938ffc595a04e442122	1538258029
+mgm4474357.3	mgm4474357.3.050.upload.fna	050.1	a6202d3e5dda9539970260c3f516af29	2290285473
+mgm4466148.3	mgm4466148.3.050.upload.fna	050.1	7dfdd296b29c086d03ae777cb37549a3	16747713282
+mgm4474359.3	mgm4474359.3.050.upload.fna	050.1	a3c700b971b1e4a0aa1b7e712c10f21d	2395798868
+mgm4469858.3	mgm4469858.3.050.upload.fna	050.1	391d1538dec85fec2f72d1d7f7e3c663	8594938232
+mgm4466149.3	mgm4466149.3.050.upload.fna	050.1	8f7a42a3a8c42b86e0f1a35fbb8113bc	7808085470
+mgm4466163.3	mgm4466163.3.050.upload.fna	050.1	19f8dec05c5bb33f1810e06de68f98a7	14472271099
+```
+
 
 Download the data from the twin study the same way. The only difference is this is MG-RAST project 10 (mgp10)
 
@@ -70,6 +94,39 @@ Download the data from the twin study the same way. The only difference is this 
 cd ../twin_data
 ../MG-RAST-Tools/tools/bin/mg-download.py --project mgp10 --list | sed 's/\t.*$//g' | sed '1d' | uniq > metagenomes.list
 cat metagenomes.list | parallel "curl http://api.metagenomics.anl.gov//download/{}?file=050.1 | tee >(md5sum > {}.md5sum) | gzip > {}.fna.gz"
+```
+
+## Digital normalization
+
+The reads were normalized by median using khmer with k-mer length of 20, count of 20 and hash size of 1e10 (Brown et al., 2012). This excluded from assembly any read that had a median k-mer of length 20 that had previously been encountered at least 20 times. This data reduction step removed redundant reads unlikely to add any more information to the assembly. The excluded reads were saved for downstream analysis. The remaining reads were filtered by abundance removing any low abundance (<5) and unique k-mers that are unlikely to assemble into larger contigs.
+
+```
+#files
+SEQS=$1
+#paths
+KHMER_SCRIPTS="/home/kiverson/khmer/scripts" #path to khmer/scripts
+ 
+#parameters
+K=20
+C=20
+X_PRAM='1e10'
+
+python $KHMER_SCRIPTS/normalize-by-median.py -k $K -C $C -x $X_PRAM --savetable $SEQS.kh $SEQS
+python $KHMER_SCRIPTS/filter-abund.py -V $SEQS.kh $SEQS.keep
+rm $SEQS.kh
+```
+
+## Assembly
+
+The reads were pooled and assembled using an iterative assembly. Reads were first assembled with Velvet using a k-mer length of 71 (parameters -exp_cov auto -read_trkg yes -amos_file yes -min_contig_lgth 200 -unused_reads yes) and unused reads were retained. The unused reads were then assembled with k-mer lengths 61, 51 and 41 with the same parameters. The contigs from each of these assemblies were merged with minimus2 (part of AMOS; Sommer et al., 2007) using default parameters.  An average of 54.43% (range 24.23% to 71.78%) of all reads across 20 metagenomes mapped back to the assembled contigs.
+
+
+## Gene prediction
+
+Genes were predicted from assembled contigs with MetaGeneAnnotator (Noguchi et al., 2008). The predicted genes were separated into two groups: having both a start and stop codon (full length) or fragments with a length greater than 300 nucleotides, including the full length group.
+
+```
+mga
 ```
 
 
@@ -104,7 +161,7 @@ For the mice study the primer sequences were removed from raw reads using SeqPre
 seqPrep
 ```
 
-The reads were normalized by median using khmer with k-mer length of 20, count of 20, hash size of 1e9 and 4 hashes (parameters -k 20 -C 20 -x 1e9 -N 4) (Brown et al., 2012). This excluded from assembly any read that had a median k-mer of length 20 that had previously been encountered at least 20 times. This data reduction step removed redundant reads unlikely to add any more information to the assembly. The excluded reads were saved for downstream analysis. The remaining reads were filtered by abundance removing any low abundance (<5) and unique k-mers that are unlikely to assemble into larger contigs
+
 
 ```
 khmer
