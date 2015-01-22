@@ -36,7 +36,7 @@ MG_DIR=`pwd`
 PYTHONPATH=$PYTHONPATH:$MG_DIR/tools/lib/
 ```
 
-To download the data from the pregnanacy study, move into the data directory.
+To download the data from the pregnancy study, move into the data directory.
 
 ```
 cd ../pregnancy_data
@@ -61,7 +61,7 @@ for MG in metagenomes.list; do
 done
 ```
 
-This will zip the raw fasta files and save the md5sums to validate the download. 
+This will zip the raw fasta files and save the md5sums to validate the download.
 
 File list:
 ```
@@ -105,7 +105,7 @@ The reads were normalized by median using khmer with k-mer length of 20, count o
 SEQS=$1
 #paths
 KHMER_SCRIPTS="/home/kiverson/khmer/scripts" #path to khmer/scripts
- 
+
 #parameters
 K=20
 C=20
@@ -122,11 +122,35 @@ The reads were pooled and assembled using an iterative assembly. Reads were firs
 
 The filtered reads were pooled, `cat *.keep.abundfilt > all.abundfilt`, and assembled using an iterative assembly.
 
-```{python}
+```
+mkdir k.49;
+velveth k.49 49 -fasta -short all.abundfilt;
+velvetg k.49 -exp_cov auto -unused_reads yes;
+rm k.49/Sequences;
+rm k.49/*Graph*
 
-
+for k in {47..21..2};
+do
+	mkdir k.$k;
+	velveth k.$k $k -fasta -short all.abundfilt;
+	velvetg k.$k -exp_cov auto -unused_reads yes;
+	rm k.$k/Sequences;
+	rm k.$k/*Graph*
+done;
 ```
 
+If using job submission software like pbs it would be a good idea so submit each velvet call as a dependent job.
+
+Combine all contigs, `cat k.*/Contigs.fa > all.contigs.fa`.
+
+## Map reads to contigs
+
+To get coverate map reads to the assembled contigs using bowtie.
+
+```
+bowtie-build
+bowtie
+```
 
 ## Gene prediction
 
@@ -215,5 +239,3 @@ Reads were assembled twice with velvet (Zerbino and Birney, 2008) using k 31 and
 
 Pregnancy
 Reads from the pregnancy data were assembled using an iterative assembly. Reads were assembled with velvet using k 71 and unused reads were retained. These unused reads were then assembled with k 61, k 51 and k 41 (parameters -exp_cov auto -read_trkg yes -amos_file yes -min_contig_lgth 200 -unused_reads yes). The contigs from each of these assemblies were merged with minimus2 using default parameters.
-
-
