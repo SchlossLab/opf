@@ -116,9 +116,17 @@ python $KHMER_SCRIPTS/filter-abund.py -V $SEQS.kh $SEQS.keep
 rm $SEQS.kh
 ```
 
+## De-replicate
+
+Technical replicates were removed using fastx_collapser. Removed reads were retained for downstream analysis.
+
+```
+fastx_collapser -i all.abundfilt -o all.abundfilt.fastx
+```
+
 ## Assembly
 
-The reads were pooled and assembled using an iterative assembly. Reads were first assembled with Velvet using a k-mer length of 71 (parameters -exp_cov auto -read_trkg yes -amos_file yes -min_contig_lgth 200 -unused_reads yes) and unused reads were retained. The unused reads were then assembled with k-mer lengths 61, 51 and 41 with the same parameters. The contigs from each of these assemblies were merged with minimus2 (part of AMOS; Sommer et al., 2007) using default parameters.  An average of 54.43% (range 24.23% to 71.78%) of all reads across 20 metagenomes mapped back to the assembled contigs.
+The de-replicated reads were pooled and assembled using an iterative assembly. Reads were first assembled with Velvet using a k-mer length of 71 (parameters -exp_cov auto -read_trkg yes -amos_file yes -min_contig_lgth 200 -unused_reads yes) and unused reads were retained. The unused reads were then assembled with k-mer lengths 61, 51 and 41 with the same parameters. The contigs from each of these assemblies were merged with minimus2 (part of AMOS; Sommer et al., 2007) using default parameters.  An average of 54.43% (range 24.23% to 71.78%) of all reads across 20 metagenomes mapped back to the assembled contigs.
 
 The filtered reads were pooled, `cat *.keep.abundfilt > all.abundfilt`, and assembled using an iterative assembly.
 
