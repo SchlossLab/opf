@@ -121,7 +121,11 @@ rm $SEQS.kh
 Technical replicates were removed using fastx_collapser. Removed reads were retained for downstream analysis.
 
 ```
-fastx_collapser -i all.abundfilt -o all.abundfilt.fastx
+for i in *.keep.abundfilt;
+do
+	fastx_collapser -i $i -o $i.fastx
+done
+
 ```
 
 ## Download screen passed reads
