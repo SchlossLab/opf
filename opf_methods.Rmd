@@ -165,7 +165,7 @@ Combine all contigs, `cat k.*/Contigs.fa > all.contigs.fa`.
 
 ## Map reads to contigs
 
-To get coverate map reads to the assembled contigs using bowtie.
+To get coverage map reads to the assembled contigs using bowtie.
 
 ```
 bowtie-build
@@ -178,6 +178,40 @@ Genes were predicted from assembled contigs with MetaGeneAnnotator (Noguchi et a
 
 ```
 mga
+mga allmerged.renamed.fa -m > genes.mga
+```
+
+## BLAST
+
+Predicted genes equal to or longer than 100 amino acids were aligned to each other using the BLAST algorithm.
+
+```
+blastp -query genes100.faa -db genes100.DB -out allvall.genes100.blast.out -evalue 1e-5 -outfmt 6 -max_target_seqs 10000 -num_threads 8
+```
+
+## Get gene counts
+
+Gene counts were determined by normalizing the number of reads mapped to each gene. As with the contigs, read mapping was done with bowtie.
+
+```
+bowtie-build
+bowtie
+```
+
+## Make count file
+
+Count files are files used by mothur to indicate counts of representitive genes without having to load all of the sequences into memory.
+
+```
+makecountfilefrombowtie.py
+```
+
+## Create OPFs
+
+Use the average neighbor clustering algorithm in mg-cluster to create OPF clusters.
+
+```
+mothur > mgcluster()
 ```
 
 
