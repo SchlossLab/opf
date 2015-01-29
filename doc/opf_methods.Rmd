@@ -57,7 +57,7 @@ cat metagenomes.list | parallel "curl http://api.metagenomics.anl.gov//download/
 Optional for-loop:
 ```
 for MG in metagenomes.list; do
-	curl http://api.metagenomics.anl.gov//download/${MG}?file=050.1 | tee >(md5sum > {}.md5sum)  | gzip > ${MG}.fna.gz
+	curl http://api.metagenomics.anl.gov//download/${MG}?file=050.1 | tee >(md5sum > data/{}.md5sum)  | gzip > data/${MG}.fna.gz
 done
 ```
 
@@ -200,7 +200,7 @@ bowtie
 
 ## Make count file
 
-Count files are files used by mothur to indicate counts of representitive genes without having to load all of the sequences into memory.
+Count files are files used by mothur to indicate counts of representative genes without having to load all of the sequences into memory.
 
 ```
 makecountfilefrombowtie.py

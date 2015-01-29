@@ -13,4 +13,5 @@ $MG_DOWNLOAD --project mgp265 --list | sed 's/\t.*$//g' | sed '1d' | uniq > meta
 #	curl http://api.metagenomics.anl.gov//download/${MG}?file=050.1 | tee >(md5sum > {}.md5sum)  | gzip > ${MG}.fna.gz
 #done
 
-cat metagenomes.list | parallel "curl http://api.metagenomics.anl.gov//download/{}?file=050.1 | tee >(md5sum > {}.md5sum)  | gzip > {}.fna.gz"
+mkdir data
+cat metagenomes.list | parallel "curl http://api.metagenomics.anl.gov//download/{}?file=050.1 | tee >(md5sum > data/{}.md5sum)  | gzip > data/{}.fna.gz"
