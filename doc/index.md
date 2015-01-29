@@ -1,11 +1,11 @@
 ---
 title       : Operational Protein Families
-subtitle    : 
+subtitle    :
 author      : Kathryn Iverson
-job         : 
+job         :
 framework   : io2012        # {io2012, html5slides, shower, dzslides, ...}
 highlighter : highlight.js  # {highlight.js, prettify, highlight}
-hitheme     : tomorrow      # 
+hitheme     : tomorrow      #
 widgets     : []            # {mathjax, quiz, bootstrap}
 mode        : standalone # {standalone, draft, selfcontained}
 knit        : slidify::knit2slides
@@ -18,25 +18,65 @@ Operational protein families are clusters of similar proteins at the aa sequence
 
 Creating OPFs is a database free method of grouping sequences
 
---- .class #id 
+--- .class #id
 
-## tl;dnr
+## Quickly:
 
-1. Get gene counts
-
-2. Cluster
-
+1. Assemble
+1. Gene prediction
+1. Get counts
+1. All v all BLAST
+1. Cluster
 
 ---
 
-## Clustering algos 
+## Assemble
 
-* *neighbor algorithms
+Iterative velvelt
+
+---
+
+## Gene prediction
+
+Metagene annotator (MGA)
+
+---
+
+## Get counts
+
+Map reads with bowtie (and normalize)
+
+---
+
+## BLAST
+
+All v all
+
+---
+
+## Cluster
+
+mg-cluster with mothur
+
+---
+
+## Counts
+
+* Use bowtie to map reads to genes
+* Normalize by sequence length
+
+---
+
+## Clustering algos
+
+* neighbor algorithms
 * k-means
 
 ---
 
-## 
+## Annotation
+
+Majority vote
 
 ---
 
