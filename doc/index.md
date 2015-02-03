@@ -32,7 +32,12 @@ Creating OPFs is a database free method of grouping sequences
 
 ## Assemble
 
-Iterative velvelt
+### Iterative velvet
+
+1. Assemble with a high k value
+1. Enable read tracking and save unused reads
+1. Assemble unused reads at a lower k value
+1. Repeat
 
 ---
 
@@ -51,6 +56,8 @@ Map reads with bowtie (and normalize)
 ## BLAST
 
 All v all
+
+Blast all genes against each other
 
 ---
 
@@ -81,6 +88,16 @@ Majority vote
 ---
 
 ## OPFs vs MG-RAST
+
+
+---
+
+## OPFs vs eggNOG
+
+
+---
+
+## OPFs vs KEGG
 
 
 ---
