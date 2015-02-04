@@ -234,6 +234,29 @@ SRR029688
 SRR029687
 ```
 
+These metagenomes can also be referenced by library name.
+
+```
+SRR029686 TS19
+SRR029687 TS1
+SRR029688 TS20
+SRR029689 TS21
+SRR029690 TS28
+SRR029691 TS29
+SRR029692 TS2
+SRR029693 TS30
+SRR029694 TS3
+SRR029695 TS49
+SRR029696 TS4
+SRR029697 TS50
+SRR029698 TS51
+SRR029699 TS5
+SRR029700 TS6
+SRR029701 TS7
+SRR029702 TS8
+SRR029703 TS9
+```
+
 Use the [SRA toolkit](http://www.ncbi.nlm.nih.gov/Traces/sra/sra.cgi?view=software) to download the fastq files for this study.
 
 ```
