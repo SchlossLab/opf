@@ -266,8 +266,14 @@ do
 done
 
 ```
+### Assembly
 
+The reads from the twin study were sequenced with 454 pyrosequencing and are longer than the Illumina reads used in the pregnancy study, therefore the long option is required for velvet.
 
+```
+velveth assembly 51 -fastq -long *.fastq
+velvetg assembly -exp_cov auto -min_contig_lgth 100
+```
 
 
 
