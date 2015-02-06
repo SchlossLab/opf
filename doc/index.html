@@ -55,25 +55,103 @@
 
 <slide class="class" id="id" style="background:;">
   <hgroup>
-    <h2>tl;dnr</h2>
+    <h2>Quickly:</h2>
   </hgroup>
   <article data-timings="">
     <ol>
-<li><p>Get gene counts</p></li>
-<li><p>Cluster</p></li>
+<li>Assemble</li>
+<li>Gene prediction</li>
+<li>Get counts</li>
+<li>All v all BLAST</li>
+<li>Cluster</li>
 </ol>
 
   </article>
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-3" style="background:;">
+<slide class="" id="">
+  <hgroup>
+    
+  </hgroup>
+  <article>
+    <hr noshade size=4 color='red'>  
+      
+    <div class='left' style='float:left;width:48%'>
+     
+    </div>    
+    <div class='right' style='float:right;width:48%'>
+     
+    </div>
+  </article>
+</slide>
+<slide class="" id="slide-4" style="background:;">
+  <hgroup>
+    <h2>Gene prediction</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>Metagene annotator (MGA)</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-5" style="background:;">
+  <hgroup>
+    <h2>Get counts</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>Map reads with bowtie (and normalize)</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-6" style="background:;">
+  <hgroup>
+    <h2>BLAST</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>All v all</p>
+
+<p>Blast all genes against each other</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-7" style="background:;">
+  <hgroup>
+    <h2>Cluster</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>mg-cluster with mothur</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-8" style="background:;">
+  <hgroup>
+    <h2>Counts</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Use bowtie to map reads to genes</li>
+<li>Normalize by sequence length</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-9" style="background:;">
   <hgroup>
     <h2>Clustering algos</h2>
   </hgroup>
   <article data-timings="">
     <ul>
-<li>*neighbor algorithms</li>
+<li>neighbor algorithms</li>
 <li>k-means</li>
 </ul>
 
@@ -81,14 +159,18 @@
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-4" style="background:;">
+<slide class="" id="slide-10" style="background:;">
+  <hgroup>
+    <h2>Annotation</h2>
+  </hgroup>
   <article data-timings="">
-    
+    <p>Majority vote</p>
+
   </article>
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-5" style="background:;">
+<slide class="" id="slide-11" style="background:;">
   <hgroup>
     <h2>OPFs vs MG-RAST</h2>
   </hgroup>
@@ -98,7 +180,27 @@
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-6" style="background:;">
+<slide class="" id="slide-12" style="background:;">
+  <hgroup>
+    <h2>OPFs vs eggNOG</h2>
+  </hgroup>
+  <article data-timings="">
+    
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-13" style="background:;">
+  <hgroup>
+    <h2>OPFs vs KEGG</h2>
+  </hgroup>
+  <article data-timings="">
+    
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-14" style="background:;">
   <article data-timings="">
     
   </article>
@@ -117,32 +219,80 @@
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=2 title='tl;dnr'>
+        data-slide=2 title='Quickly:'>
          2
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=3 title='Clustering algos'>
+        data-slide=3 title='Assemble'>
          3
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=4 title=''>
+        data-slide=4 title='Gene prediction'>
          4
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=5 title='OPFs vs MG-RAST'>
+        data-slide=5 title='Get counts'>
          5
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=6 title=''>
+        data-slide=6 title='BLAST'>
          6
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=7 title='Cluster'>
+         7
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=8 title='Counts'>
+         8
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=9 title='Clustering algos'>
+         9
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=10 title='Annotation'>
+         10
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=11 title='OPFs vs MG-RAST'>
+         11
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=12 title='OPFs vs eggNOG'>
+         12
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=13 title='OPFs vs KEGG'>
+         13
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=14 title=''>
+         14
       </a>
     </li>
   </ul>
