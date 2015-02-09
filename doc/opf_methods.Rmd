@@ -266,6 +266,7 @@ do
 done
 
 ```
+
 ### Assembly
 
 The reads from the twin study were sequenced with 454 pyrosequencing and are longer than the Illumina reads used in the pregnancy study, therefore the long option is required for velvet.
@@ -273,6 +274,61 @@ The reads from the twin study were sequenced with 454 pyrosequencing and are lon
 ```
 velveth assembly 51 -fastq -long *.fastq
 velvetg assembly -exp_cov auto -min_contig_lgth 100
+```
+
+### Alignment
+
+Align the reads to the contigs to asess coverage. These are 454 reads so an aligner that can handle long reads, like bwa-sw, must be used.
+
+```
+bwa index -a bwtsw twinSRAgenes300.fna
+mv twinSRAgenes300.fna.* bwa/
+cd reads
+bwasw ref reads > aln.sam
+
+bwa-sw reads contigs.fa
+```
+
+### Gene prediction
+
+Genes were predicted from assembled contigs with MetaGeneAnnotator (Noguchi et al., 2008). The predicted genes were separated into two groups: having both a start and stop codon (full length) or fragments with a length greater than 300 nucleotides, including the full length group.
+
+```
+mga
+mga allmerged.renamed.fa -m > genes.mga
+```
+
+### BLAST
+
+Predicted genes equal to or longer than 100 amino acids were aligned to each other using the BLAST algorithm.
+
+```
+blastp -query genes100.faa -db genes100.DB -out allvall.genes100.blast.out -evalue 1e-5 -outfmt 6 -max_target_seqs 10000 -num_threads 8
+```
+
+### Get gene counts
+
+Gene counts were determined by normalizing the number of reads mapped to each gene. As with the contigs, read mapping was done with bowtie.
+
+```
+bowtie-build
+bowtie
+```
+
+### Make count file
+
+Count files are files used by mothur to indicate counts of representative genes without having to load all of the sequences into memory.
+
+```
+makecountfilefrombowtie.py
+```
+
+### Create OPFs
+
+Use the average neighbor clustering algorithm in mg-cluster to create OPF clusters.
+
+```
+mothur > mgcluster()
 ```
 
 
