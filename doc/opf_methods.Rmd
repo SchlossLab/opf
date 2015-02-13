@@ -154,6 +154,15 @@ If using job submission software like pbs it would be a good idea so submit each
 
 Combine all contigs, `cat k.*/Contigs.fa > all.contigs.fa`.
 
+### Megahit assembly
+
+For this dataset, megahit gave the best assembly.
+
+```
+megahit -m 45e9 -r all.abundfilt.fastx --cpu-only -l 100 -o all.abundfilt.fastx_megahit
+
+```
+
 ### Map reads to contigs
 
 To get coverage map reads to the assembled contigs using bowtie.
