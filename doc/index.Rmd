@@ -28,6 +28,24 @@ Creating OPFs is a database free method of grouping sequences
 1. All v all BLAST
 1. Cluster
 
+--- &twocol
+
+## Two Columns
+
+*** left
+
+- point a
+- point b
+- point c
+
+*** right
+
+- point a
+- point b
+- point c
+
+---
+
 ---
 
 ## Assemble
