@@ -28,11 +28,11 @@ Creating OPFs is a database free method of grouping sequences
 1. All v all BLAST
 1. Cluster
 
---- &twocol
+---
 
 ## Assemble
 
-*** left
+
 
 ### Iterative velvet
 
@@ -41,10 +41,12 @@ Creating OPFs is a database free method of grouping sequences
 1. Assemble unused reads at a lower k value
 1. Repeat
 
-*** right
+
 
 ### Megahit
-do stuff
+
+* Runs an iterative assembly by default, small k to large
+* Much faster than iterative velvet
 
 ---
 
@@ -91,6 +93,22 @@ mg-cluster with mothur
 ## Annotation
 
 Majority vote
+
+---
+
+# HMP dataset
+
+---
+
+## eggNOG
+
+---
+
+## KEGG
+
+---
+
+# Pregnancy study
 
 ---
 

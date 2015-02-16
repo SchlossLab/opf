@@ -174,12 +174,19 @@ bowtie
 
 ### Gene prediction
 
-Genes were predicted from assembled contigs with MetaGeneAnnotator (Noguchi et al., 2008). The predicted genes were separated into two groups: having both a start and stop codon (full length) or fragments with a length greater than 300 nucleotides, including the full length group.
+Genes were predicted from assembled contigs with MetaGeneAnnotator(MGA) (Noguchi et al., 2008). The predicted genes were separated into two groups: having both a start and stop codon (full length) or fragments with a length greater than 300 nucleotides, including the full length group.
 
 ```
-mga
-mga allmerged.renamed.fa -m > genes.mga
+mga final.contigs.fa -m > final.contigs.fa.genes
 ```
+
+MGA prints out the coordinates of the genes which can then be extracted from the contigs.
+
+```
+python ~/scripts/getgenesbypos.py final.contigs.fa.genes final.contigs.fa final.contigs.fa.genes.faa final.contigs.fa.genes.fna
+```
+
+
 
 ### BLAST
 
@@ -194,8 +201,13 @@ blastp -query genes100.faa -db genes100.DB -out allvall.genes100.blast.out -eval
 Gene counts were determined by normalizing the number of reads mapped to each gene. As with the contigs, read mapping was done with bowtie.
 
 ```
-bowtie-build
-bowtie
+bowtie2-build final.contigs.fa.genes.fna preg.genes.fna.bowtieDB
+bowtie2 preg.genes.fna.bowtieDB -f ../all.fna -p 16 -S aligned2genes.sam
+samtools view -bS aligned2genes.sam > aligned2genes.bam
+rm aligned2genes.sam
+samtools sort aligned2genes.bam aligned2genes.sorted.bam
+samtools index aligned2genes.sorted.bam
+samtools idxstats aligned2genes.sorted.bam > mapped2genes.txt
 ```
 
 ### Make count file
@@ -320,8 +332,8 @@ blastp -query genes100.faa -db genes100.DB -out allvall.genes100.blast.out -eval
 Gene counts were determined by normalizing the number of reads mapped to each gene. As with the contigs, read mapping was done with bowtie.
 
 ```
-bowtie-build
-bowtie
+bowtie2-build final.contigs.fa.genes.fna twin.genes.fna.bowtieDB
+bowtie2 twin.genes.fna.bowtieDB -f ../all.fna -p 16 -S aligned2genes.sam
 ```
 
 ### Make count file
