@@ -330,7 +330,11 @@ Use the average neighbor clustering algorithm in mg-cluster to create OPF cluste
 ```
 mothur > mgcluster()
 ```
-
+mgcluster -> list file
+make.shared -> shared file
+sub.sample
+dist.shared -> dist file
+nmds -> plot
 
 
 HMP
