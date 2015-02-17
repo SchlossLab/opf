@@ -200,6 +200,12 @@ blastp -query genes100.faa -db genes100.DB -out allvall.genes100.blast.out -eval
 
 Gene counts were determined by normalizing the number of reads mapped to each gene. As with the contigs, read mapping was done with bowtie.
 
+Build bowtie database:
+
+```
+bowtie2-build final.contigs.fa.genes.fna preg.genes.fna.bowtieDB
+```
+
 ```
 bowtie2-build final.contigs.fa.genes.fna preg.genes.fna.bowtieDB
 bowtie2 preg.genes.fna.bowtieDB -f ../all.fna -p 16 -S aligned2genes.sam
@@ -210,13 +216,39 @@ samtools index aligned2genes.sorted.bam
 samtools idxstats aligned2genes.sorted.bam > mapped2genes.txt
 ```
 
+Gene counts by group (this must be done in bash in order for the process substitution to work):
+
+```
+#!/bin/bash
+READS=$1
+BASE=$(basename $READS .fna.gz)
+bowtie2 preg.genes.fna.bowtieDB -f <(zcat $READS) -p 16 -S $BASE.aligned2genes.sam
+
+samtools view -bS $BASE.aligned2genes.sam > $BASE.aligned2genes.bam
+rm $BASE.aligned2genes.sam
+samtools sort $BASE.aligned2genes.bam $BASE.aligned2genes.sorted
+rm $BASE.aligned2genes.bam
+
+samtools index $BASE.aligned2genes.sorted.bam
+samtools idxstats $BASE.aligned2genes.sorted.bam > $BASE.mapped2genes.txt
+```
+
 ### Make count file
 
 Count files are files used by mothur to indicate counts of representative genes without having to load all of the sequences into memory.
 
+For all groups combined:
+
 ```
-makecountfilefrombowtie.py
+makecountfilefrombowtie.py -f final.contigs.fa.genes.faa -o preg.genes.counts -l mapped2genes.txt
 ```
+
+Mapping by group:
+
+```
+
+```
+
 
 ### Create OPFs
 
