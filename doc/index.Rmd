@@ -2,7 +2,7 @@
 title       : Operational Protein Families
 subtitle    :
 author      : Kathryn Iverson
-job         :
+job         : Bioinformagician
 framework   : io2012        # {io2012, html5slides, shower, dzslides, ...}
 highlighter : highlight.js  # {highlight.js, prettify, highlight}
 hitheme     : tomorrow      #
@@ -30,28 +30,9 @@ Creating OPFs is a database free method of grouping sequences
 
 --- &twocol
 
-## Two Columns
-
-*** left
-
-- point a
-- point b
-- point c
-
-*** right
-
-- point a
-- point b
-- point c
-
----
-
----
-
 ## Assemble
 
-
-
+*** =left
 ### Iterative velvet
 
 1. Assemble with a high k value
@@ -60,7 +41,7 @@ Creating OPFs is a database free method of grouping sequences
 1. Repeat
 
 
-
+*** =right
 ### Megahit
 
 * Runs an iterative assembly by default, small k to large
@@ -74,9 +55,16 @@ Metagene annotator (MGA)
 
 ---
 
-## Get counts
+## Estimate gene counts
 
 Map reads with bowtie (and normalize)
+
+---
+
+## Counts file
+
+* Use bowtie to map reads to genes
+* Normalize by sequence length
 
 ---
 
@@ -91,13 +79,6 @@ Blast all genes against each other
 ## Cluster
 
 mg-cluster with mothur
-
----
-
-## Counts
-
-* Use bowtie to map reads to genes
-* Normalize by sequence length
 
 ---
 
