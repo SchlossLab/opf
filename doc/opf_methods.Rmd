@@ -220,6 +220,8 @@ Gene counts by group (this must be done in bash in order for the process substit
 
 ```
 #!/bin/bash
+set -e
+set -o pipefail
 READS=$1
 BASE=$(basename $READS .fna.gz)
 bowtie2 preg.genes.fna.bowtieDB -f <(zcat $READS) -p 16 -S $BASE.aligned2genes.sam
@@ -246,7 +248,7 @@ makecountfilefrombowtie.py -f final.contigs.fa.genes.faa -o preg.genes.counts -l
 Mapping by group:
 
 ```
-
+makecountfilefrombowtie.py -f final.contigs.fa.genes.faa -o preg.genes.counts -l mgm*.mapped2genes.txt
 ```
 
 
