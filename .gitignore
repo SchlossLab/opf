@@ -1,5 +1,5 @@
 #big data -- can be populated as needed with get_data.sh
-data/
+data/raw
 
 *.py[cod]
 
