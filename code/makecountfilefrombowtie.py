@@ -35,7 +35,7 @@ def get_next_fasta (fileObject):
         if line.startswith('>'):
             header = line.strip()
             break
-    
+
     for line in fileObject:
         if line.startswith('>'):
             yield header, seq
@@ -88,8 +88,7 @@ for header, seq in get_next_fasta(args.fasta):
     length = len(seq)
     if totalreads == 0:
         continue
-    totalreads = totalreads * numBases #normalize to number of bases
+    #totalreads = totalreads * numBases #normalize to number of bases
     #num = int( m.ceil(totalreads/len(seq) ) )
     groupcounts[:] = [int(m.ceil((x*numBases)/len(seq))) for x in groupcounts]
     args.outfile.write("%s\t%s\t%s\n" % (header[1:], sum(groupcounts), '\t'.join(map(str, groupcounts) ) ) )
-
