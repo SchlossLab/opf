@@ -55,9 +55,16 @@ Metagene annotator (MGA)
 
 ---
 
-## Get counts
+## Estimate gene counts
 
 Map reads with bowtie (and normalize)
+
+---
+
+## Counts file
+
+* Use bowtie to map reads to genes
+* Normalize by sequence length
 
 ---
 
@@ -72,13 +79,6 @@ Blast all genes against each other
 ## Cluster
 
 mg-cluster with mothur
-
----
-
-## Counts
-
-* Use bowtie to map reads to genes
-* Normalize by sequence length
 
 ---
 
