@@ -3,11 +3,11 @@ title       : Operational Protein Families
 subtitle    :
 author      : Kathryn Iverson
 job         : Bioinformagician
-framework   : io2012        # {io2012, html5slides, shower, dzslides, ...}
+framework   : io2012       # {io2012, html5slides, shower, dzslides, ...}
 highlighter : highlight.js  # {highlight.js, prettify, highlight}
 hitheme     : tomorrow      #
 widgets     : []            # {mathjax, quiz, bootstrap}
-mode        : standalone # {standalone, draft, selfcontained}
+mode        : selfcontained # {standalone, draft, selfcontained}
 knit        : slidify::knit2slides
 ---
 
@@ -51,7 +51,13 @@ Creating OPFs is a database free method of grouping sequences
 
 ## Gene prediction
 
-Metagene annotator (MGA)
+### Metagene annotator (MGA)
+
+* Gene prediction models for Bacteria, Archaea and Phage
+* Uses ribosomal binding site patterns as predictors for domain
+* Optimised for short fragments
+    - uses 700bp fragment as example
+    - similar to contig sizes seen after assembly
 
 ---
 
@@ -64,7 +70,11 @@ Map reads with bowtie (and normalize)
 ## Counts file
 
 * Use bowtie to map reads to genes
-* Normalize by sequence length
+* Normalize by sequence length 
+
+```
+ceiling(num_reads_mapped * 100 / len(gene))
+````
 
 ---
 
@@ -91,11 +101,13 @@ mg-cluster with mothur
 
 ## Annotation
 
-Majority vote
+BLAST genes to a database of your choice, KEGG for example, and annotate OPF by majority vote.
 
 ---
 
 # HMP dataset
+
+Dataset was too large to cluster as a whole so OPFs were clustered within the KEGG category they 
 
 ---
 
