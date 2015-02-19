@@ -261,6 +261,27 @@ Use the average neighbor clustering algorithm in mg-cluster to create OPF cluste
 mothur > mgcluster()
 ```
 
+### Get distances
+
+```
+mothur > dist()
+```
+
+### R stuff
+
+Read in lower triangle distance matrix
+
+```
+matrixcols <- readLines("preg.eggnog.thetayc.1.lt.dist", n=1)
+d <- read.table(file="preg.eggnog_nona.thetayc.1.lt.dist", fill=TRUE, header=F, skip=1, row.names=1, col.names=paste("V", 1:matrixcols))
+d$x<-NA
+mat<-data.matrix(d)
+mat[is.na(mat)]<-0
+mat <- mat + t(mat)
+colnames(mat)<-rownames(mat)
+```
+
+
 ## Lean and obese twin dataset
 
 ### Download data
