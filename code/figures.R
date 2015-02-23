@@ -67,7 +67,7 @@ dev.off()
 
 # Figure 3
 
-t.bin <- read.table(file='twin_opf_bin.csv', sep=' ', header=T, row.names=1)
+t.bin <- read.table(file='../references/twin_opf_bin.csv', sep=' ', header=T, row.names=1)
 rsum <- rowSums(t.bin)
 t.bin['sum'] <- NA
 t.bin$sum <- rsum
@@ -77,7 +77,7 @@ for (i in 1:18){
 	s <- sum(t.bin$sum==i)
 	twin.o.sums[i,1] <- s
 }
-tk.bin <- read.table(file='twin_kegg_bin.csv', sep=' ', header=T, row.names=1)
+tk.bin <- read.table(file='../references/twin_kegg_bin.csv', sep=' ', header=T, row.names=1)
 rksum <- rowSums(tk.bin)
 tk.bin['sum'] <- NA
 tk.bin$sum <- rksum
@@ -87,7 +87,7 @@ for (i in 1:18){
 	s <- sum(tk.bin$sum==i)
  	twin.k.sums[i,1] <- s
 }
-ts.bin <- read.table(file='twin_16s_bin.csv', sep=' ', header=T, row.names=1)
+ts.bin <- read.table(file='../references/twin_16s_bin.csv', sep=' ', header=T, row.names=1)
 rssum <- rowSums(ts.bin)
 ts.bin['sum'] <- NA
 ts.bin$sum <- rssum
@@ -108,7 +108,7 @@ dev.off()
 
 # Figure 4
 
-preg.pcoa <- read.csv(file='pregnancy_pcoa_vars.csv', sep=',', header=T)
+preg.pcoa <- read.csv(file='../references/pregnancy_pcoa_vars.csv', sep=',', header=T)
 
 devSVG(file='Fig4.svg')
 ggplot(preg.pcoa, aes(axis1, axis2, shape=trimester)) + geom_point(size=5) + theme_bw()  + facet_wrap(~method, ncol=1, scales='free')
