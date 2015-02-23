@@ -264,6 +264,7 @@ mothur > mgcluster()
 ### Get distances
 
 ```
+dist.shared(shared=allVall100.an.unique_list.shared, processors=16, calc=thetayc, subsample=2515565)
 mothur > dist()
 ```
 
