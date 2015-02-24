@@ -57,7 +57,7 @@ Databases are not great
 
 * Runs an iterative assembly by default, small k to large
 * Much faster than iterative velvet
-* Yes, I know I'm mixing numbers and bullets. Deal with it.
+* Yes, I know I'm mixing numbers and bullets.
 
 ---
 
@@ -75,7 +75,7 @@ Databases are not great
 
 ## Estimate gene counts
 
-Map reads with bowtie for short reads (Illumina), bwa for long reads (454) and normalize to gene length
+Map reads with bowtie for short reads, bwa for long reads and normalize to gene length
 
 ### Counts file
 
@@ -143,9 +143,9 @@ Dataset was too large to cluster as a whole so OPFs were created within the KEGG
 
 *** =right
 
-* Turnbaugh et al argue there is no core microbiome at the taxonomic level but there may be a functional core
+* Turnbaugh et al argue there is no taxanomic core but there may be a functional core
 * This seems to be true with the very coarse metric of KEGG functional categories
-* OPFs reflect the 16s (dis)similarity  
+* OPFs reflect the 16s (dis)similarity
 
 ---
 
