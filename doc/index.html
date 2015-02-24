@@ -42,12 +42,22 @@
     <!-- SLIDES -->
     <slide class="" id="slide-1" style="background:;">
   <hgroup>
-    <h2>OPFs</h2>
+    <h2>What:</h2>
   </hgroup>
   <article data-timings="">
-    <p>Operational protein families are clusters of similar proteins at the aa sequence level</p>
+    <p>Operational protein families are clusters of similar proteins</p>
 
-<p>Creating OPFs is a database free method of grouping sequences</p>
+<p>Creating OPFs is a database free method of grouping sequences analogous to OTUs</p>
+
+<h2>Why:</h2>
+
+<p>Databases are not great</p>
+
+<ul>
+<li>Genes present are limited to what we &quot;know&quot; or at least have seen before</li>
+<li>Annotations are limited in the same way</li>
+<li>Leaves a large (often over half) of the data in a black box</li>
+</ul>
 
   </article>
   <!-- Presenter Notes -->
@@ -55,10 +65,12 @@
 
 <slide class="class" id="id" style="background:;">
   <hgroup>
-    <h2>Quickly:</h2>
+    <h2>How to make OPFs</h2>
   </hgroup>
   <article data-timings="">
-    <ol>
+    <h3>Quickly:</h3>
+
+<ol>
 <li>Assemble</li>
 <li>Gene prediction</li>
 <li>Get counts</li>
@@ -93,6 +105,7 @@
 <ul>
 <li>Runs an iterative assembly by default, small k to large</li>
 <li>Much faster than iterative velvet</li>
+<li>Yes, I know I&#39;m mixing numbers and bullets. Deal with it.</li>
 </ul>
 
 </div>
@@ -110,7 +123,7 @@
 <ul>
 <li>Gene prediction models for Bacteria, Archaea and Phage</li>
 <li>Uses ribosomal binding site patterns as predictors for domain</li>
-<li>Optimised for short fragments
+<li>Optimized for short fragments
 
 <ul>
 <li>uses 700bp fragment as example</li>
@@ -129,16 +142,9 @@
   <article data-timings="">
     <p>Map reads with bowtie (and normalize)</p>
 
-  </article>
-  <!-- Presenter Notes -->
-</slide>
+<h3>Counts file</h3>
 
-<slide class="" id="slide-6" style="background:;">
-  <hgroup>
-    <h2>Counts file</h2>
-  </hgroup>
-  <article data-timings="">
-    <ul>
+<ul>
 <li>Use bowtie to map reads to genes</li>
 <li>Normalize by sequence length </li>
 </ul>
@@ -150,14 +156,55 @@
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-7" style="background:;">
+<slide class="" id="slide-6" style="background:;">
   <hgroup>
-    <h2>BLAST</h2>
+    <h2>Creating OPFs</h2>
   </hgroup>
   <article data-timings="">
-    <p>All v all</p>
+    <h3>BLAST</h3>
 
-<p>Blast all genes against each other</p>
+<p>All v all</p>
+
+<p>Blast all genes against each other (proteins, blastp)</p>
+
+<pre><code>-max_target_seqs 10000
+</code></pre>
+
+<h3>Cluster</h3>
+
+<p>mg-cluster with mothur</p>
+
+<pre><code>mgcluster(blast=allVall100.out, count=allgenes.preg.counts)
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-7" style="background:;">
+  <hgroup>
+    <h2>Datasets</h2>
+  </hgroup>
+  <article data-timings="">
+    <ol>
+<li>Obesity in twins (Turnbaugh et al. 2009)
+
+<ul>
+<li>18 metagenomes from lean and obese twin pairs and their mothers</li>
+<li>From MG-RAST</li>
+</ul></li>
+<li>Pregnancy (Koren et al. 2012)
+
+<ul>
+<li>20 metagenomes from mothers during the first and third trimester of pregnancy</li>
+<li>From NCBI (MG-RAST data is messed up and being fixed with zero urgency)</li>
+</ul></li>
+<li>HMP data
+
+<ul>
+<li>138 metagenomes</li>
+</ul></li>
+</ol>
 
   </article>
   <!-- Presenter Notes -->
@@ -165,24 +212,34 @@
 
 <slide class="" id="slide-8" style="background:;">
   <hgroup>
-    <h2>Cluster</h2>
+    <h2>Twin data</h2>
   </hgroup>
   <article data-timings="">
-    <p>mg-cluster with mothur</p>
+    
+<div style='float:left;width:48%;'>
+  <p><img src="assets/fig/unnamed-chunk-2-1.png" alt="plot of chunk unnamed-chunk-2"> </p>
 
+</div>
+<div style='float:right;width:48%;'>
+  
+</div>
   </article>
   <!-- Presenter Notes -->
 </slide>
 
 <slide class="" id="slide-9" style="background:;">
-  <hgroup>
-    <h2>Clustering algos</h2>
-  </hgroup>
   <article data-timings="">
-    <ul>
-<li>neighbor algorithms</li>
-<li>k-means</li>
-</ul>
+    <p><img src="assets/img/figure_2.svg" alt="image"></p>
+
+<!--
+
+Figure 2
+
+t.pcoa <- read.table(file='twin_pcoa_opf_kegg_16s_vars.csv', sep=',', header=T)
+
+ggplot(t.pcoa, aes(axis1, axis2, color=weight, shape=as.factor(group), group=as.factor(family))) + geom_point(size=4) + theme_bw() + xlab("Dimension 1") + ylab("Dimension 2") + geom_polygon(aes(mapping=group, alpha=1)) + facet_wrap(~method, scales='free', ncol=1) + theme(plot.background = element_blank(), panel.grid.major = element_blank(), panel.grid.minor = element_blank(), panel.border = element_blank(), panel.background = element_blank()) + theme(axis.line = element_line(color = 'black'))
+
+-->
 
   </article>
   <!-- Presenter Notes -->
@@ -190,16 +247,39 @@
 
 <slide class="" id="slide-10" style="background:;">
   <hgroup>
-    <h2>Annotation</h2>
+    <h2>Pregnancy data</h2>
   </hgroup>
   <article data-timings="">
-    <p>BLAST genes to a database of your choice, KEGG for example, and annotate OPF by majority vote.</p>
+    <p><img src="assets/fig/unnamed-chunk-3-1.png" alt="plot of chunk unnamed-chunk-3"> </p>
 
   </article>
   <!-- Presenter Notes -->
 </slide>
 
 <slide class="" id="slide-11" style="background:;">
+  <article data-timings="">
+    <!--
+ 
+## I'm a commented slide 1
+ 
+From Slidify's authoring process, this slide was made:
+1. Edit YAML front matter
+2. Write using R Markdown
+3. Use an empty line followed by three dashes to separate slides!
+
+![plot of chunk unnamed-chunk-4](assets/fig/unnamed-chunk-4-1.png) 
+ 
+-->
+
+<h2>Annotation</h2>
+
+<p>BLAST genes to a database of your choice, KEGG for example, and annotate OPF by majority vote.</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-12" style="background:;">
   <hgroup>
     <h1>HMP dataset</h1>
   </hgroup>
@@ -210,67 +290,7 @@
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-12" style="background:;">
-  <hgroup>
-    <h2>eggNOG</h2>
-  </hgroup>
-  <article data-timings="">
-    
-  </article>
-  <!-- Presenter Notes -->
-</slide>
-
 <slide class="" id="slide-13" style="background:;">
-  <hgroup>
-    <h2>KEGG</h2>
-  </hgroup>
-  <article data-timings="">
-    
-  </article>
-  <!-- Presenter Notes -->
-</slide>
-
-<slide class="" id="slide-14" style="background:;">
-  <hgroup>
-    <h1>Pregnancy study</h1>
-  </hgroup>
-  <article data-timings="">
-    
-  </article>
-  <!-- Presenter Notes -->
-</slide>
-
-<slide class="" id="slide-15" style="background:;">
-  <hgroup>
-    <h2>OPFs vs MG-RAST</h2>
-  </hgroup>
-  <article data-timings="">
-    
-  </article>
-  <!-- Presenter Notes -->
-</slide>
-
-<slide class="" id="slide-16" style="background:;">
-  <hgroup>
-    <h2>OPFs vs eggNOG</h2>
-  </hgroup>
-  <article data-timings="">
-    
-  </article>
-  <!-- Presenter Notes -->
-</slide>
-
-<slide class="" id="slide-17" style="background:;">
-  <hgroup>
-    <h2>OPFs vs KEGG</h2>
-  </hgroup>
-  <article data-timings="">
-    
-  </article>
-  <!-- Presenter Notes -->
-</slide>
-
-<slide class="" id="slide-18" style="background:;">
   <article data-timings="">
     
   </article>
@@ -283,13 +303,13 @@
     <ul>
       <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=1 title='OPFs'>
+        data-slide=1 title='What:'>
          1
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=2 title='Quickly:'>
+        data-slide=2 title='How to make OPFs'>
          2
       </a>
     </li>
@@ -313,80 +333,50 @@
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=6 title='Counts file'>
+        data-slide=6 title='Creating OPFs'>
          6
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=7 title='BLAST'>
+        data-slide=7 title='Datasets'>
          7
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=8 title='Cluster'>
+        data-slide=8 title='Twin data'>
          8
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=9 title='Clustering algos'>
+        data-slide=9 title=''>
          9
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=10 title='Annotation'>
+        data-slide=10 title='Pregnancy data'>
          10
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=11 title='HMP dataset'>
+        data-slide=11 title=''>
          11
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=12 title='eggNOG'>
+        data-slide=12 title='HMP dataset'>
          12
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=13 title='KEGG'>
+        data-slide=13 title=''>
          13
-      </a>
-    </li>
-    <li>
-      <a href="#" target="_self" rel='tooltip' 
-        data-slide=14 title='Pregnancy study'>
-         14
-      </a>
-    </li>
-    <li>
-      <a href="#" target="_self" rel='tooltip' 
-        data-slide=15 title='OPFs vs MG-RAST'>
-         15
-      </a>
-    </li>
-    <li>
-      <a href="#" target="_self" rel='tooltip' 
-        data-slide=16 title='OPFs vs eggNOG'>
-         16
-      </a>
-    </li>
-    <li>
-      <a href="#" target="_self" rel='tooltip' 
-        data-slide=17 title='OPFs vs KEGG'>
-         17
-      </a>
-    </li>
-    <li>
-      <a href="#" target="_self" rel='tooltip' 
-        data-slide=18 title=''>
-         18
       </a>
     </li>
   </ul>

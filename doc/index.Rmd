@@ -10,17 +10,32 @@ widgets     : []            # {mathjax, quiz, bootstrap}
 mode        : selfcontained # {standalone, draft, selfcontained}
 knit        : slidify::knit2slides
 ---
+```{r echo=F}
+library(RSvgDevice)
+library(ggplot2)
+library(gplots)
+library(reshape)
+```
 
+## What:
 
-## OPFs
+Operational protein families are clusters of similar proteins
 
-Operational protein families are clusters of similar proteins at the aa sequence level
+Creating OPFs is a database free method of grouping sequences analogous to OTUs
 
-Creating OPFs is a database free method of grouping sequences
+## Why:
+
+Databases are not great
+
+* Genes present are limited to what we "know" or at least have seen before
+* Annotations are limited in the same way
+* Leaves a large (often over half) of the data in a black box
 
 --- .class #id
 
-## Quickly:
+## How to make OPFs
+
+### Quickly:
 
 1. Assemble
 1. Gene prediction
@@ -46,6 +61,7 @@ Creating OPFs is a database free method of grouping sequences
 
 * Runs an iterative assembly by default, small k to large
 * Much faster than iterative velvet
+* Yes, I know I'm mixing numbers and bullets. Deal with it.
 
 ---
 
@@ -55,7 +71,7 @@ Creating OPFs is a database free method of grouping sequences
 
 * Gene prediction models for Bacteria, Archaea and Phage
 * Uses ribosomal binding site patterns as predictors for domain
-* Optimised for short fragments
+* Optimized for short fragments
     - uses 700bp fragment as example
     - similar to contig sizes seen after assembly
 
@@ -65,9 +81,7 @@ Creating OPFs is a database free method of grouping sequences
 
 Map reads with bowtie (and normalize)
 
----
-
-## Counts file
+### Counts file
 
 * Use bowtie to map reads to genes
 * Normalize by sequence length 
@@ -78,26 +92,173 @@ ceiling(num_reads_mapped * 100 / len(gene))
 
 ---
 
-## BLAST
+## Creating OPFs
+
+### BLAST
 
 All v all
 
-Blast all genes against each other
+Blast all genes against each other (proteins, blastp)
 
----
+```
+-max_target_seqs 10000
+```
 
-## Cluster
+### Cluster
 
 mg-cluster with mothur
 
----
-
-## Clustering algos
-
-* neighbor algorithms
-* k-means
+```
+mgcluster(blast=allVall100.out, count=allgenes.preg.counts)
+```
 
 ---
+
+## Datasets
+
+1. Obesity in twins (Turnbaugh et al. 2009)
+    - 18 metagenomes from lean and obese twin pairs and their mothers
+    - From MG-RAST
+1. Pregnancy (Koren et al. 2012)
+    - 20 metagenomes from mothers during the first and third trimester of pregnancy
+    - From NCBI (MG-RAST data is messed up and being fixed with zero urgency)
+1. HMP data
+    - 138 metagenomes
+
+--- &twocol
+
+## Twin data
+
+*** =left
+
+```{r echo=FALSE}
+summarySE <- function(data=NULL, measurevar, groupvars=NULL, na.rm=FALSE,
+                      conf.interval=.95, .drop=TRUE) {
+    require(plyr)
+
+    # New version of length which can handle NA's: if na.rm==T, don't count them
+    length2 <- function (x, na.rm=FALSE) {
+        if (na.rm) sum(!is.na(x))
+        else       length(x)
+    }
+
+    # This is does the summary; it's not easy to understand...
+    datac <- ddply(data, groupvars, .drop=.drop,
+                   .fun= function(xx, col, na.rm) {
+                           c( N    = length2(xx[,col], na.rm=na.rm),
+                              mean = mean   (xx[,col], na.rm=na.rm),
+                              sd   = sd     (xx[,col], na.rm=na.rm)
+                              )
+                          },
+                    measurevar,
+                    na.rm
+             )
+
+    # Rename the "mean" column    
+    datac <- rename(datac, c("mean"=measurevar))
+
+    datac$se <- datac$sd / sqrt(datac$N)  # Calculate standard error of the mean
+
+    # Confidence interval multiplier for standard error
+    # Calculate t-statistic for confidence interval: 
+    # e.g., if conf.interval is .95, use .975 (above/below), and use df=N-1
+    ciMult <- qt(conf.interval/2 + .5, datac$N-1)
+    datac$ci <- datac$se * ciMult
+
+    return(datac)
+}
+
+t.dists <- read.csv(file='../data/references/distance_comparison.csv', sep=',', header=T)
+dfc <- summarySE(t.dists, measurevar="dist_bars", groupvars=c("type","method"))
+
+ggplot(dfc, aes(x=method, y=dist_bars, group=type, fill=type)) + 
+    geom_errorbar(aes(ymin=dist_bars-se, ymax=dist_bars+se), width=.1, position=position_dodge(.9)) +
+    geom_bar(position=position_dodge(), stat='identity', colour='black') + theme_bw() + ylab('Distance') + xlab(' ') + scale_x_discrete(limits=c("unifrac", "unifrac_uw", "16s","opf", "kegg"), labels=c('Weighted Unifrac', 'Unweighted Unifrac', '16S', 'OPF', 'KEGG')) + theme(legend.justification=c(0,1), legend.position=c(0,1)) + scale_fill_manual(values=c("#000000", '#666666', "white"), 
+                       name="Comparison",
+                       breaks=c("all", "family", "twins"),
+                       labels=c("Unrelated", "Inside family", "Twin to twin"))
+```
+
+*** =right
+
+
+
+---
+
+![image](assets/img/figure_2.svg)
+
+<!-- this file went missing before this was under version control. Need to find it or re-generate it...but this is the code to make the plot
+
+Figure 2
+
+t.pcoa <- read.table(file='twin_pcoa_opf_kegg_16s_vars.csv', sep=',', header=T)
+
+ggplot(t.pcoa, aes(axis1, axis2, color=weight, shape=as.factor(group), group=as.factor(family))) + geom_point(size=4) + theme_bw() + xlab("Dimension 1") + ylab("Dimension 2") + geom_polygon(aes(mapping=group, alpha=1)) + facet_wrap(~method, scales='free', ncol=1) + theme(plot.background = element_blank(), panel.grid.major = element_blank(), panel.grid.minor = element_blank(), panel.border = element_blank(), panel.background = element_blank()) + theme(axis.line = element_line(color = 'black'))
+
+-->
+
+---
+
+## Pregnancy data
+
+```{r echo=FALSE}
+preg.pcoa <- read.csv(file='../data/references/pregnancy_pcoa_vars.csv', sep=',', header=T)
+ggplot(preg.pcoa, aes(axis1, axis2, shape=trimester)) + geom_point(size=5) + theme_bw()  + facet_wrap(~method, ncol=1, scales='free')
+```
+
+---
+
+
+<!--
+ 
+## I'm a commented slide 1
+ 
+From Slidify's authoring process, this slide was made:
+1. Edit YAML front matter
+2. Write using R Markdown
+3. Use an empty line followed by three dashes to separate slides!
+
+```{r echo=FALSE}
+
+t.bin <- read.table(file='../data/references/twin_opf_bin.csv', sep=' ', header=T, row.names=1)
+rsum <- rowSums(t.bin)
+t.bin['sum'] <- NA
+t.bin$sum <- rsum
+twin.o.sums <- matrix(nrow=18, ncol=1)
+ 
+for (i in 1:18){
+    s <- sum(t.bin$sum==i)
+    twin.o.sums[i,1] <- s
+}
+tk.bin <- read.table(file='../data/references/twin_kegg_bin.csv', sep=' ', header=T, row.names=1)
+rksum <- rowSums(tk.bin)
+tk.bin['sum'] <- NA
+tk.bin$sum <- rksum
+twin.k.sums <- matrix(nrow=18, ncol=1)
+ 
+for (i in 1:18){
+	s <- sum(tk.bin$sum==i)
+ 	twin.k.sums[i,1] <- s
+}
+ts.bin <- read.table(file='../data/references/twin_16s_bin.csv', sep=' ', header=T, row.names=1)
+rssum <- rowSums(ts.bin)
+ts.bin['sum'] <- NA
+ts.bin$sum <- rssum
+twin.s.sums <- matrix(nrow=18, ncol=1)
+ 
+for (i in 1:18){
+ 	s <- sum(ts.bin$sum==i)
+ 	twin.s.sums[i,1] <- s
+}
+
+plot(twin.o.sums, log='y', ylim=c(0.6, 6000), xlab='# of samples', ylab='Shared OPFs/OTUs/KEGG Categories', pch=15, cex=4)
+points(twin.s.sums, pch=16, cex=4)
+points(twin.k.sums, pch=17, cex=4)
+legend(1, 100, c('OPF', 'OTU', 'KEGG'), pch=c(15, 16, 17), , cex=4)
+
+```
+ 
+-->
 
 ## Annotation
 
@@ -111,29 +272,4 @@ Dataset was too large to cluster as a whole so OPFs were clustered within the KE
 
 ---
 
-## eggNOG
 
----
-
-## KEGG
-
----
-
-# Pregnancy study
-
----
-
-## OPFs vs MG-RAST
-
-
----
-
-## OPFs vs eggNOG
-
-
----
-
-## OPFs vs KEGG
-
-
----

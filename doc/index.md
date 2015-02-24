@@ -12,15 +12,25 @@ knit        : slidify::knit2slides
 ---
 
 
-## OPFs
+## What:
 
-Operational protein families are clusters of similar proteins at the aa sequence level
+Operational protein families are clusters of similar proteins
 
-Creating OPFs is a database free method of grouping sequences
+Creating OPFs is a database free method of grouping sequences analogous to OTUs
+
+## Why:
+
+Databases are not great
+
+* Genes present are limited to what we "know" or at least have seen before
+* Annotations are limited in the same way
+* Leaves a large (often over half) of the data in a black box
 
 --- .class #id
 
-## Quickly:
+## How to make OPFs
+
+### Quickly:
 
 1. Assemble
 1. Gene prediction
@@ -46,6 +56,7 @@ Creating OPFs is a database free method of grouping sequences
 
 * Runs an iterative assembly by default, small k to large
 * Much faster than iterative velvet
+* Yes, I know I'm mixing numbers and bullets. Deal with it.
 
 ---
 
@@ -55,7 +66,7 @@ Creating OPFs is a database free method of grouping sequences
 
 * Gene prediction models for Bacteria, Archaea and Phage
 * Uses ribosomal binding site patterns as predictors for domain
-* Optimised for short fragments
+* Optimized for short fragments
     - uses 700bp fragment as example
     - similar to contig sizes seen after assembly
 
@@ -65,9 +76,7 @@ Creating OPFs is a database free method of grouping sequences
 
 Map reads with bowtie (and normalize)
 
----
-
-## Counts file
+### Counts file
 
 * Use bowtie to map reads to genes
 * Normalize by sequence length 
@@ -78,26 +87,86 @@ ceiling(num_reads_mapped * 100 / len(gene))
 
 ---
 
-## BLAST
+## Creating OPFs
+
+### BLAST
 
 All v all
 
-Blast all genes against each other
+Blast all genes against each other (proteins, blastp)
 
----
+```
+-max_target_seqs 10000
+```
 
-## Cluster
+### Cluster
 
 mg-cluster with mothur
 
----
-
-## Clustering algos
-
-* neighbor algorithms
-* k-means
+```
+mgcluster(blast=allVall100.out, count=allgenes.preg.counts)
+```
 
 ---
+
+## Datasets
+
+1. Obesity in twins (Turnbaugh et al. 2009)
+    - 18 metagenomes from lean and obese twin pairs and their mothers
+    - From MG-RAST
+1. Pregnancy (Koren et al. 2012)
+    - 20 metagenomes from mothers during the first and third trimester of pregnancy
+    - From NCBI (MG-RAST data is messed up and being fixed with zero urgency)
+1. HMP data
+    - 138 metagenomes
+
+--- &twocol
+
+## Twin data
+
+*** =left
+
+![plot of chunk unnamed-chunk-2](assets/fig/unnamed-chunk-2-1.png) 
+
+*** =right
+
+
+
+---
+
+![image](assets/img/figure_2.svg)
+
+<!--
+
+Figure 2
+
+t.pcoa <- read.table(file='twin_pcoa_opf_kegg_16s_vars.csv', sep=',', header=T)
+
+ggplot(t.pcoa, aes(axis1, axis2, color=weight, shape=as.factor(group), group=as.factor(family))) + geom_point(size=4) + theme_bw() + xlab("Dimension 1") + ylab("Dimension 2") + geom_polygon(aes(mapping=group, alpha=1)) + facet_wrap(~method, scales='free', ncol=1) + theme(plot.background = element_blank(), panel.grid.major = element_blank(), panel.grid.minor = element_blank(), panel.border = element_blank(), panel.background = element_blank()) + theme(axis.line = element_line(color = 'black'))
+
+-->
+
+---
+
+## Pregnancy data
+
+![plot of chunk unnamed-chunk-3](assets/fig/unnamed-chunk-3-1.png) 
+
+---
+
+
+<!--
+ 
+## I'm a commented slide 1
+ 
+From Slidify's authoring process, this slide was made:
+1. Edit YAML front matter
+2. Write using R Markdown
+3. Use an empty line followed by three dashes to separate slides!
+
+![plot of chunk unnamed-chunk-4](assets/fig/unnamed-chunk-4-1.png) 
+ 
+-->
 
 ## Annotation
 
@@ -111,29 +180,4 @@ Dataset was too large to cluster as a whole so OPFs were clustered within the KE
 
 ---
 
-## eggNOG
 
----
-
-## KEGG
-
----
-
-# Pregnancy study
-
----
-
-## OPFs vs MG-RAST
-
-
----
-
-## OPFs vs eggNOG
-
-
----
-
-## OPFs vs KEGG
-
-
----
