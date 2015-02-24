@@ -12,6 +12,7 @@ knit        : slidify::knit2slides
 ---
 
 
+
 ## What:
 
 Operational protein families are clusters of similar proteins
@@ -74,7 +75,7 @@ Databases are not great
 
 ## Estimate gene counts
 
-Map reads with bowtie (and normalize)
+Map reads with bowtie for short reads (Illumina), bwa for long reads (454) and normalize to gene length
 
 ### Counts file
 
@@ -115,10 +116,22 @@ mgcluster(blast=allVall100.out, count=allgenes.preg.counts)
     - 18 metagenomes from lean and obese twin pairs and their mothers
     - From MG-RAST
 1. Pregnancy (Koren et al. 2012)
-    - 20 metagenomes from mothers during the first and third trimester of pregnancy
+    - 20 metagenomes from 10 mothers during the first and third trimester of pregnancy
     - From NCBI (MG-RAST data is messed up and being fixed with zero urgency)
 1. HMP data
     - 138 metagenomes
+    
+
+
+---
+
+## HMP dataset
+
+Dataset was too large to cluster as a whole so OPFs were created within the KEGG category to which the genes were a best match
+
+1. BLAST genes against KEGG
+1. Group genes by their KEGG top hit
+1. Cluster seperatly within this group
 
 --- &twocol
 
@@ -130,13 +143,15 @@ mgcluster(blast=allVall100.out, count=allgenes.preg.counts)
 
 *** =right
 
-
+* Turnbaugh et al argue there is no core microbiome at the taxonomic level but there may be a functional core
+* This seems to be true with the very coarse metric of KEGG functional categories
+* OPFs reflect the 16s (dis)similarity  
 
 ---
 
 ![image](assets/img/figure_2.svg)
 
-<!--
+<!-- this file went missing before this was under version control. Need to find it or re-generate it...but this is the code to make the plot
 
 Figure 2
 
@@ -146,11 +161,19 @@ ggplot(t.pcoa, aes(axis1, axis2, color=weight, shape=as.factor(group), group=as.
 
 -->
 
----
+--- &twocol
 
 ## Pregnancy data
 
+*** =left
+
 ![plot of chunk unnamed-chunk-3](assets/fig/unnamed-chunk-3-1.png) 
+
+*** =right
+
+* Distances are very small with the KEGG pcoa
+* Similar to the twin dataset, OPFs tend to follow OTUs
+* Functional core may be a reflection of database limitations 
 
 ---
 
@@ -170,14 +193,10 @@ From Slidify's authoring process, this slide was made:
 
 ## Annotation
 
-BLAST genes to a database of your choice, KEGG for example, and annotate OPF by majority vote.
+* BLAST genes to a database of your choice, KEGG for example, and annotate OPF by majority vote.
+* They're still only as good as your database though...
 
----
 
-# HMP dataset
 
-Dataset was too large to cluster as a whole so OPFs were clustered within the KEGG category they 
-
----
 
 

@@ -10,7 +10,9 @@ widgets     : []            # {mathjax, quiz, bootstrap}
 mode        : selfcontained # {standalone, draft, selfcontained}
 knit        : slidify::knit2slides
 ---
-```{r echo=F}
+
+```{r echo=FALSE}
+options(warn=-1)
 library(RSvgDevice)
 library(ggplot2)
 library(gplots)
@@ -79,7 +81,7 @@ Databases are not great
 
 ## Estimate gene counts
 
-Map reads with bowtie (and normalize)
+Map reads with bowtie for short reads (Illumina), bwa for long reads (454) and normalize to gene length
 
 ### Counts file
 
@@ -120,10 +122,22 @@ mgcluster(blast=allVall100.out, count=allgenes.preg.counts)
     - 18 metagenomes from lean and obese twin pairs and their mothers
     - From MG-RAST
 1. Pregnancy (Koren et al. 2012)
-    - 20 metagenomes from mothers during the first and third trimester of pregnancy
+    - 20 metagenomes from 10 mothers during the first and third trimester of pregnancy
     - From NCBI (MG-RAST data is messed up and being fixed with zero urgency)
 1. HMP data
     - 138 metagenomes
+    
+
+
+---
+
+## HMP dataset
+
+Dataset was too large to cluster as a whole so OPFs were created within the KEGG category to which the genes were a best match
+
+1. BLAST genes against KEGG
+1. Group genes by their KEGG top hit
+1. Cluster seperatly within this group
 
 --- &twocol
 
@@ -132,6 +146,7 @@ mgcluster(blast=allVall100.out, count=allgenes.preg.counts)
 *** =left
 
 ```{r echo=FALSE}
+options(warn=-1)
 summarySE <- function(data=NULL, measurevar, groupvars=NULL, na.rm=FALSE,
                       conf.interval=.95, .drop=TRUE) {
     require(plyr)
@@ -181,7 +196,9 @@ ggplot(dfc, aes(x=method, y=dist_bars, group=type, fill=type)) +
 
 *** =right
 
-
+* Turnbaugh et al argue there is no core microbiome at the taxonomic level but there may be a functional core
+* This seems to be true with the very coarse metric of KEGG functional categories
+* OPFs reflect the 16s (dis)similarity  
 
 ---
 
@@ -197,14 +214,23 @@ ggplot(t.pcoa, aes(axis1, axis2, color=weight, shape=as.factor(group), group=as.
 
 -->
 
----
+--- &twocol
 
 ## Pregnancy data
 
+*** =left
+
 ```{r echo=FALSE}
+options(warn=-1)
 preg.pcoa <- read.csv(file='../data/references/pregnancy_pcoa_vars.csv', sep=',', header=T)
 ggplot(preg.pcoa, aes(axis1, axis2, shape=trimester)) + geom_point(size=5) + theme_bw()  + facet_wrap(~method, ncol=1, scales='free')
 ```
+
+*** =right
+
+* Distances are very small with the KEGG pcoa
+* Similar to the twin dataset, OPFs tend to follow OTUs
+* Functional core may be a reflection of database limitations 
 
 ---
 
@@ -219,7 +245,7 @@ From Slidify's authoring process, this slide was made:
 3. Use an empty line followed by three dashes to separate slides!
 
 ```{r echo=FALSE}
-
+options(warn=-1)
 t.bin <- read.table(file='../data/references/twin_opf_bin.csv', sep=' ', header=T, row.names=1)
 rsum <- rowSums(t.bin)
 t.bin['sum'] <- NA
@@ -262,14 +288,10 @@ legend(1, 100, c('OPF', 'OTU', 'KEGG'), pch=c(15, 16, 17), , cex=4)
 
 ## Annotation
 
-BLAST genes to a database of your choice, KEGG for example, and annotate OPF by majority vote.
+* BLAST genes to a database of your choice, KEGG for example, and annotate OPF by majority vote.
+* They're still only as good as your database though...
 
----
 
-# HMP dataset
 
-Dataset was too large to cluster as a whole so OPFs were clustered within the KEGG category they 
-
----
 
 

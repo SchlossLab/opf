@@ -140,7 +140,7 @@
     <h2>Estimate gene counts</h2>
   </hgroup>
   <article data-timings="">
-    <p>Map reads with bowtie (and normalize)</p>
+    <p>Map reads with bowtie for short reads (Illumina), bwa for long reads (454) and normalize to gene length</p>
 
 <h3>Counts file</h3>
 
@@ -196,7 +196,7 @@
 <li>Pregnancy (Koren et al. 2012)
 
 <ul>
-<li>20 metagenomes from mothers during the first and third trimester of pregnancy</li>
+<li>20 metagenomes from 10 mothers during the first and third trimester of pregnancy</li>
 <li>From NCBI (MG-RAST data is messed up and being fixed with zero urgency)</li>
 </ul></li>
 <li>HMP data
@@ -212,6 +212,23 @@
 
 <slide class="" id="slide-8" style="background:;">
   <hgroup>
+    <h2>HMP dataset</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>Dataset was too large to cluster as a whole so OPFs were created within the KEGG category to which the genes were a best match</p>
+
+<ol>
+<li>BLAST genes against KEGG</li>
+<li>Group genes by their KEGG top hit</li>
+<li>Cluster seperatly within this group</li>
+</ol>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-9" style="background:;">
+  <hgroup>
     <h2>Twin data</h2>
   </hgroup>
   <article data-timings="">
@@ -221,17 +238,22 @@
 
 </div>
 <div style='float:right;width:48%;'>
-  
+  <ul>
+<li>Turnbaugh et al argue there is no core microbiome at the taxonomic level but there may be a functional core</li>
+<li>This seems to be true with the very coarse metric of KEGG functional categories</li>
+<li>OPFs reflect the 16s (dis)similarity<br></li>
+</ul>
+
 </div>
   </article>
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-9" style="background:;">
+<slide class="" id="slide-10" style="background:;">
   <article data-timings="">
     <p><img src="assets/img/figure_2.svg" alt="image"></p>
 
-<!--
+<!-- this file went missing before this was under version control. Need to find it or re-generate it...but this is the code to make the plot
 
 Figure 2
 
@@ -245,18 +267,29 @@ ggplot(t.pcoa, aes(axis1, axis2, color=weight, shape=as.factor(group), group=as.
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-10" style="background:;">
+<slide class="" id="slide-11" style="background:;">
   <hgroup>
     <h2>Pregnancy data</h2>
   </hgroup>
   <article data-timings="">
-    <p><img src="assets/fig/unnamed-chunk-3-1.png" alt="plot of chunk unnamed-chunk-3"> </p>
+    
+<div style='float:left;width:48%;'>
+  <p><img src="assets/fig/unnamed-chunk-3-1.png" alt="plot of chunk unnamed-chunk-3"> </p>
 
+</div>
+<div style='float:right;width:48%;'>
+  <ul>
+<li>Distances are very small with the KEGG pcoa</li>
+<li>Similar to the twin dataset, OPFs tend to follow OTUs</li>
+<li>Functional core may be a reflection of database limitations </li>
+</ul>
+
+</div>
   </article>
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-11" style="background:;">
+<slide class="" id="slide-12" style="background:;">
   <article data-timings="">
     <!--
  
@@ -273,26 +306,11 @@ From Slidify's authoring process, this slide was made:
 
 <h2>Annotation</h2>
 
-<p>BLAST genes to a database of your choice, KEGG for example, and annotate OPF by majority vote.</p>
+<ul>
+<li>BLAST genes to a database of your choice, KEGG for example, and annotate OPF by majority vote.</li>
+<li>They&#39;re still only as good as your database though...</li>
+</ul>
 
-  </article>
-  <!-- Presenter Notes -->
-</slide>
-
-<slide class="" id="slide-12" style="background:;">
-  <hgroup>
-    <h1>HMP dataset</h1>
-  </hgroup>
-  <article data-timings="">
-    <p>Dataset was too large to cluster as a whole so OPFs were clustered within the KEGG category they </p>
-
-  </article>
-  <!-- Presenter Notes -->
-</slide>
-
-<slide class="" id="slide-13" style="background:;">
-  <article data-timings="">
-    
   </article>
   <!-- Presenter Notes -->
 </slide>
@@ -345,38 +363,32 @@ From Slidify's authoring process, this slide was made:
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=8 title='Twin data'>
+        data-slide=8 title='HMP dataset'>
          8
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=9 title=''>
+        data-slide=9 title='Twin data'>
          9
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=10 title='Pregnancy data'>
+        data-slide=10 title=''>
          10
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=11 title=''>
+        data-slide=11 title='Pregnancy data'>
          11
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=12 title='HMP dataset'>
+        data-slide=12 title=''>
          12
-      </a>
-    </li>
-    <li>
-      <a href="#" target="_self" rel='tooltip' 
-        data-slide=13 title=''>
-         13
       </a>
     </li>
   </ul>
