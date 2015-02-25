@@ -432,11 +432,91 @@ Abundance was calculated by number of reads mapping onto predicted genes and fra
 The OPF abundances were transformed into binary data and OPF occurrences within and between groups of samples inside each dataset were analyzed with R.  For the mice data, we combined the 16S and OPF data using correlation analysis and these results are summarized in a heatmap showing the 20 OTUs that had significantly different abundance during the early and late periods and the OPFs correlating with these.
 
 
+## HMP Keratinized gingiva
+
+### Get data
+
+Download called genes from HMP
+
+```
+wget ftp://public-ftp.hmpdacc.org/HMGI/attached_keratinized_gingiva/*
+```
+
+File list:
+
+```
+SRS013946.with_fasta.gff3.bz2   SRS014473.with_fasta.gff3.bz2   SRS014687.with_fasta.gff3.bz2   SRS015060.with_fasta.gff3.bz2   SRS019025.with_fasta.gff3.bz2   SRS019125.with_fasta.gff3.bz2
+SRS013946_aa.fasta.bz2          SRS014473_aa.fasta.bz2          SRS014687_aa.fasta.bz2          SRS015060_aa.fasta.bz2          SRS019025_aa.fasta.bz2          SRS019125_aa.fasta.bz2
+SRS013946_nucleotide.fasta.bz2  SRS014473_nucleotide.fasta.bz2  SRS014687_nucleotide.fasta.bz2  SRS015060_nucleotide.fasta.bz2  SRS019025_nucleotide.fasta.bz2  SRS019125_nucleotide.fasta.bz2
+```
+
+Download raw reads (for counts)
+
+```
+wget ftp://public-ftp.hmpdacc.org/Illumina/attached_keratinized_gingiva/*
+```
+
+File list:
+
+```
+2f3eb882d63b22a16352a6107957178f  SRS013946.tar.bz2
+47dcb8d6485d9a7b5a1998b1c2270977  SRS014473.tar.bz2
+e7db62f393c32197d5f4784fb3b19d76  SRS014687.tar.bz2
+7633c105e0bf63fadeec5c02ef9076f3  SRS015060.tar.bz2
+78c202438e8729197f6b1d76981f231d  SRS019025.tar.bz2
+b3bfd385662f10c9c87187233c801dd7  SRS019125.tar.bz2
+```
+
+### BLAST
+
+All v all blast
+
+```
+formatdb -i all.aa.genes100.fasta -p T -n all.aa.genes100.fasta.blastDB
+blastp -query all.aa.genes100.fasta -db all.aa.genes100.fasta.blastDB -out allvall.aa.genes100.out -evalue 1e-5 -outfmt 6 -max_target_seqs 10000 -num_threads 8
+```
 
 
+### Map reads to genes
+
+Build a database
+
+```
+bowtie-build all.nucleotide.genes300.fasta all.nucleotide.genes300.fasta.bowtieDB
+```
+
+map reads
+
+```
+#!/bin/bash
+set -e
+set -o pipefail
+READS=$1
+BASE=$(basename $READS .tar.bz2)
+
+bzcat $READS | tar -xvf -
+
+bowtie ../calledgenes/all.nucleotide.genes300.fasta.bowtieDB -1 $BASE/$BASE.denovo_duplicates_marked.trimmed.1.fastq -2 $BASE/$BASE.denovo_duplicates_marked.trimmed.1.fastq -p 16 -S $BASE.pe.aligned2genes.sam
+
+samtools view -bS $BASE.pe.aligned2genes.sam > $BASE.pe.aligned2genes.bam
+rm $BASE.pe.aligned2genes.sam
+samtools sort $BASE.pe.aligned2genes.bam $BASE.pe.aligned2genes.sorted
+rm $BASE.pe.aligned2genes.bam
+
+samtools index $BASE.pe.aligned2genes.sorted.bam
+samtools idxstats $BASE.pe.aligned2genes.sorted.bam > $BASE.pe.mapped2genes.txt
 
 
+bowtie ../calledgenes/all.nucleotide.genes300.fasta.bowtieDB -q $BASE/$BASE.denovo_duplicates_marked.trimmed.singleton.fastq -p 16 -S $BASE.se.aligned2genes.sam
 
+samtools view -bS $BASE.se.aligned2genes.sam > $BASE.se.aligned2genes.bam
+rm $BASE.se.aligned2genes.sam
+samtools sort $BASE.se.aligned2genes.bam $BASE.se.aligned2genes.sorted
+rm $BASE.se.aligned2genes.bam
+
+samtools index $BASE.se.aligned2genes.sorted.bam
+samtools idxstats $BASE.se.aligned2genes.sorted.bam > $BASE.se.mapped2genes.txt
+```
 
 =======================
 
