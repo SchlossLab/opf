@@ -518,6 +518,19 @@ samtools index $BASE.se.aligned2genes.sorted.bam
 samtools idxstats $BASE.se.aligned2genes.sorted.bam > $BASE.se.mapped2genes.txt
 ```
 
+Add counts for genes that didn't have reads map to them (count as 0)
+
+```
+getMissingGenes.py kg.genes.count ../calledgenes/allvall.aa.genes100.out missingGenes.txt && cat kg.genes.count missingGenes.txt > kg.genes.ALL.count
+```
+
+### Cluster
+
+Cluster genes with mgcluster
+```
+mothur '#mgcluster(blast=/mnt/EXT/Schloss-data/kiverson/hmp_kg/calledgenes/allvall.aa.genes100.out, count=/mnt/EXT/Schloss-data/kiverson/hmp_kg/cluster/kg.genes.ALL.count
+```
+
 =======================
 
 Download the data from the twin study the same way. The only difference is this is MG-RAST project 10 (mgp10)
