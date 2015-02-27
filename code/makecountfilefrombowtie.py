@@ -10,9 +10,11 @@ from __future__ import division
 import sys
 import os
 import math as m
-from collections import defaultdict
+from collections import defaultdict, Counter
 import fileinput
 import argparse
+import operator
+import functools
 
 parser = argparse.ArgumentParser(description='Make countfile from bowtie/sametools output')
 parser.add_argument('-t', '--type', dest ='fasta_type', default='P')
@@ -60,7 +62,10 @@ for file in args.filelist:
         if gene != "*":
             reads = int(line[2])
             countdict[gene] += reads
-    groupdict[group] = countdict
+    if group in groupdict:
+        groupdict[group] = functools.reduce(operator.add, map(Counter, [countdict, groupdict]))
+    else:
+        groupdict[group] = countdict
     countdict = defaultdict(int)
     infile.close()
 
