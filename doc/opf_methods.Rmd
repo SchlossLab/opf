@@ -496,7 +496,7 @@ BASE=$(basename $READS .tar.bz2)
 
 bzcat $READS | tar -xvf -
 
-bowtie ../calledgenes/all.nucleotide.genes300.fasta.bowtieDB -1 $BASE/$BASE.denovo_duplicates_marked.trimmed.1.fastq -2 $BASE/$BASE.denovo_duplicates_marked.trimmed.1.fastq -p 16 -S $BASE.pe.aligned2genes.sam
+bowtie ../calledgenes/all.nucleotide.genes300.fasta.bowtieDB -1 $BASE/$BASE.denovo_duplicates_marked.trimmed.1.fastq -2 $BASE/$BASE.denovo_duplicates_marked.trimmed.2.fastq -p 16 -S $BASE.pe.aligned2genes.sam
 
 samtools view -bS $BASE.pe.aligned2genes.sam > $BASE.pe.aligned2genes.bam
 rm $BASE.pe.aligned2genes.sam
