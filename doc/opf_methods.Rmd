@@ -531,6 +531,138 @@ Cluster genes with mgcluster
 mothur '#mgcluster(blast=/mnt/EXT/Schloss-data/kiverson/hmp_kg/calledgenes/allvall.aa.genes100.out, count=/mnt/EXT/Schloss-data/kiverson/hmp_kg/cluster/kg.genes.ALL.count
 ```
 
+
+## HMP Saliva
+
+### Get data
+
+Download raw reads
+
+```
+wget ftp://public-ftp.hmpdacc.org/Illumina/saliva/*
+```
+
+Files:
+
+```
+11cb282fd2bd3235963a0ec404385aee  SRS013942.tar.bz2
+04e6659bf16ab6346533110a17c6324f  SRS014468.tar.bz2
+7d9e128a12bfd8e3aca2c4fa534aed70  SRS014692.tar.bz2
+2841467ebbbff274c20d7caa931faaa2  SRS015055.tar.bz2
+c884c9135361f2ae41db336df63f5e09  SRS019120.tar.bz2
+```
+
+Download genes
+
+```
+wget ftp://public-ftp.hmpdacc.org/HMGI/saliva/*
+```
+
+Files:
+
+```
+55f2d8d146f32e7f89191fd3061daa66  SRS013942_aa.fasta.bz2
+0cdcec08b194433ccd06887d4d8707e5  SRS013942_nucleotide.fasta.bz2
+e71f8c8691dd97c046711a979cfd1e12  SRS013942.with_fasta.gff3.bz2
+e2039cf4fe9f557be4fd96aa805a9853  SRS015055_aa.fasta.bz2
+5f14cb207ccc1b70411ffa56aac483e9  SRS015055_nucleotide.fasta.bz2
+d3aa53bab98e0ee635f0365f250a7c2c  SRS015055.with_fasta.gff3.bz2
+7d1ff4e4f8e4f3d9b2e0b7f95cbd92d7  SRS019120_aa.fasta.bz2
+9a83e6da8c43c9c10216c3839c924a6e  SRS019120_nucleotide.fasta.bz2
+4f97d628d591988e9c05a00c418995fe  SRS019120.with_fasta.gff3.bz2
+```
+
+Files listed in ftp://public-ftp.hmpdacc.org/HMGI/md5sums.txt
+
+```
+e71f8c8691dd97c046711a979cfd1e12  saliva/SRS013942.with_fasta.gff3.bz2
+d3aa53bab98e0ee635f0365f250a7c2c  saliva/SRS015055.with_fasta.gff3.bz2
+4f97d628d591988e9c05a00c418995fe  saliva/SRS019120.with_fasta.gff3.bz2
+```
+
+### BLAST
+
+Get genes > 100 amino acids
+
+```
+cat *.fasta > all.genes.aa.fasta
+python ~/scripts/removeShortContigs.py all.genes.aa.fasta all.aa.genes100.fasta 100
+```
+
+All v all BLAST
+
+```
+formatdb -i all.aa.genes100.fasta -p T -n all.aa.genes100.fasta.blastDB
+blastp -query all.aa.genes100.fasta -db all.aa.genes100.fasta.blastDB -out allvall.aa.genes100.out -evalue 1e-5 -outfmt 6 -max_target_seqs 10000 -num_threads 8
+```
+
+
+### Map reads to genes
+
+Build a database
+
+```
+cat *_nucleotide.fasta > all.nucleotide.fasta
+python ~/scripts/removeShortContigs.py all.nucleotide.fasta all.nucleotide.genes300.fasta 300
+bowtie-build all.nucleotide.genes300.fasta all.nucleotide.genes300.fasta.bowtieDB
+```
+
+map reads
+
+```
+#!/bin/bash
+set -e
+set -o pipefail
+READS=$1
+BASE=$(basename $READS .tar.bz2)
+
+bzcat $READS | tar -xvf -
+
+bowtie ../genes/all.nucleotide.genes300.fasta.bowtieDB -1 $BASE/$BASE.denovo_duplicates_marked.trimmed.1.fastq -2 $BASE/$BASE.denovo_duplicates_marked.trimmed.2.fastq -p 16 -S $BASE.pe.aligned2genes.sam
+
+samtools view -bS $BASE.pe.aligned2genes.sam > $BASE.pe.aligned2genes.bam
+rm $BASE.pe.aligned2genes.sam
+samtools sort $BASE.pe.aligned2genes.bam $BASE.pe.aligned2genes.sorted
+rm $BASE.pe.aligned2genes.bam
+
+samtools index $BASE.pe.aligned2genes.sorted.bam
+samtools idxstats $BASE.pe.aligned2genes.sorted.bam > $BASE.pe.mapped2genes.txt
+rm $BASE.pe.aligned2genes.sorted.bam
+
+
+bowtie ../genes/all.nucleotide.genes300.fasta.bowtieDB -q $BASE/$BASE.denovo_duplicates_marked.trimmed.singleton.fastq -p 16 -S $BASE.se.aligned2genes.sam
+
+samtools view -bS $BASE.se.aligned2genes.sam > $BASE.se.aligned2genes.bam
+rm $BASE.se.aligned2genes.sam
+samtools sort $BASE.se.aligned2genes.bam $BASE.se.aligned2genes.sorted
+rm $BASE.se.aligned2genes.bam
+
+samtools index $BASE.se.aligned2genes.sorted.bam
+samtools idxstats $BASE.se.aligned2genes.sorted.bam > $BASE.se.mapped2genes.txt
+rm $BASE.se.aligned2genes.sorted.bam
+
+rm -rf $BASE
+```
+
+### Make count file
+
+```
+python ../../opf/code/makecountfilefrombowtie.py -f ../genes/all.aa.genes100.fasta -o saliva.genes.count -l *.txt
+```
+
+Add counts for genes that didn't have reads map to them (count as 0)
+
+```
+getMissingGenes.py kg.genes.count ../calledgenes/allvall.aa.genes100.out missingGenes.txt && cat kg.genes.count missingGenes.txt > kg.genes.ALL.count
+```
+
+### Cluster
+
+Cluster genes with mgcluster
+```
+mothur '#mgcluster(blast=/mnt/EXT/Schloss-data/kiverson/hmp_kg/calledgenes/allvall.aa.genes100.out, count=/mnt/EXT/Schloss-data/kiverson/hmp_kg/cluster/kg.genes.ALL.count
+```
+
 =======================
 
 Download the data from the twin study the same way. The only difference is this is MG-RAST project 10 (mgp10)
