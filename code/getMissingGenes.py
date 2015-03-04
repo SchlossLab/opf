@@ -9,6 +9,7 @@ blast = []
 
 for line in countfile:
     if line.startswith("R"):
+        nGroups = len(line.strip().split("\t")) - 1
         continue
     line = line.strip()
     line = line.split("\t")
@@ -25,7 +26,7 @@ for line in blastfile:
     blast.append(line[1])
 
 blastfile.close()
-zeros = [0]*21
+zeros = [0]*nGroups
 for gene in set(blast) ^ set(counts):
     outfile.write("%s\t%s\n" % (gene, '\t'.join(map(str, zeros)) ) )
     #outfile.write("%s\t0\t0\t0\n" % gene )
