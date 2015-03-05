@@ -664,6 +664,135 @@ mothur '#mgcluster(blast=/mnt/EXT/Schloss-data/kiverson/hmp_saliva/genes/allvall
 mothur '#make.shared(count=saliva.ALL.genes.count, list=allvall.aa.genes100.an.unique_list.list)'
 ```
 
+## HMP left retroauricular crease
+
+### Get data
+
+Get reads:
+
+```
+wget ftp://public-ftp.hmpdacc.org/Illumina/left_retroauricular_crease/*
+```
+
+reads, md5sum .bz2:
+
+```
+a56827ec36c7f7273f7219d4d54a196a  SRS013258.tar.bz2
+225af4d878d9a3c8d2a0f2a20be4243a  SRS016944.tar.bz2
+50452b9b04db83d1e39014e46cf3838b  SRS017849.tar.bz2
+a3c1348de933d8b9c017d416d48be2ea  SRS019015.tar.bz2
+de7fb60a1680c08aba666f1cfe6d5f39  SRS019063.tar.bz2
+e79a5e2b0d3e82dc3db97b346e7b4c9a  SRS020261.tar.bz2
+cd4ee71a7af859dba4dfe43bbd573e2c  SRS024482.tar.bz2
+8bac9dd877bf1480676c984f79558168  SRS024596.tar.bz2
+a286cdc62000286673efaf67b5c72266  SRS024620.tar.bz2
+```
+
+Genes:
+
+```
+wget ftp://public-ftp.hmpdacc.org/HMGI/left_retroauricular_crease/*
+```
+
+```
+482f432515c673264f85382e9283676b  SRS013258_aa.fasta.bz2
+1ecfed9aa54796d453f26c9399ec64b2  SRS013258_nucleotide.fasta.bz2
+609a49dc1eebd1452a6b960b95488c07  SRS013258.with_fasta.gff3.bz2
+36b24778cf88361df3edcdd73957f8b7  SRS016944_aa.fasta.bz2
+7c7a6f48826f0bc5ad5c20d9a732614c  SRS016944_nucleotide.fasta.bz2
+6ae331b977f65cf8c66a9aa689cf410d  SRS016944.with_fasta.gff3.bz2
+1e34d6fece02e14ea1f02518b0a74647  SRS017849_aa.fasta.bz2
+f58a27d36ab3c41b14aece615f4e8e46  SRS017849_nucleotide.fasta.bz2
+c22cb8e1076b8c3d5e41eb389f5dcc65  SRS017849.with_fasta.gff3.bz2
+99de47244373d6f04d4cdb5a9b821050  SRS019015_aa.fasta.bz2
+0af6d599800a78bf70a877ae6a17b31b  SRS019015_nucleotide.fasta.bz2
+3248d758db5ff8258591d46b3c75d490  SRS019015.with_fasta.gff3.bz2
+8f65326ed31c73223360fadfb7cd2b95  SRS019063_aa.fasta.bz2
+7db24ac2ea8dac576bebb5b553d272da  SRS019063_nucleotide.fasta.bz2
+cacb2cf8d2bb9df2d5007f816e1fa49b  SRS019063.with_fasta.gff3.bz2
+c7273eff5cf0858bdb979379f9265973  SRS020261_aa.fasta.bz2
+add8ad4d6c8e7575c70d118bf39b73ec  SRS020261_nucleotide.fasta.bz2
+aad412fca16392d432a9fd9522bd1a00  SRS020261.with_fasta.gff3.bz2
+b092b0ce63051fe8078a800353b15ce7  SRS024482_aa.fasta.bz2
+b825535dfa943421d34e44797180dd10  SRS024482_nucleotide.fasta.bz2
+11513918ca19ab0902cf9d7bff4d49b6  SRS024482.with_fasta.gff3.bz2
+edfb276d56666ddc29b68dab4c7186b1  SRS024596_aa.fasta.bz2
+e0d1e606dcb9405d956e3d2315939732  SRS024596_nucleotide.fasta.bz2
+7d3e7936f653b79cc7cea057688a3abc  SRS024596.with_fasta.gff3.bz2
+ec778e17c6143720aa568238b84428dd  SRS024620_aa.fasta.bz2
+7bb9eabaf860237ec73e1a4751eadc7c  SRS024620_nucleotide.fasta.bz2
+29c31244ca8d6bb26d9a7e099b608057  SRS024620.with_fasta.gff3.bz2
+```
+
+md5sums from ftp://public-ftp.hmpdacc.org/HMGI/md5sums.txt
+
+```
+609a49dc1eebd1452a6b960b95488c07  left_retroauricular_crease/SRS013258.with_fasta.gff3.bz2
+6ae331b977f65cf8c66a9aa689cf410d  left_retroauricular_crease/SRS016944.with_fasta.gff3.bz2
+c22cb8e1076b8c3d5e41eb389f5dcc65  left_retroauricular_crease/SRS017849.with_fasta.gff3.bz2
+3248d758db5ff8258591d46b3c75d490  left_retroauricular_crease/SRS019015.with_fasta.gff3.bz2
+cacb2cf8d2bb9df2d5007f816e1fa49b  left_retroauricular_crease/SRS019063.with_fasta.gff3.bz2
+aad412fca16392d432a9fd9522bd1a00  left_retroauricular_crease/SRS020261.with_fasta.gff3.bz2
+11513918ca19ab0902cf9d7bff4d49b6  left_retroauricular_crease/SRS024482.with_fasta.gff3.bz2
+7d3e7936f653b79cc7cea057688a3abc  left_retroauricular_crease/SRS024596.with_fasta.gff3.bz2
+29c31244ca8d6bb26d9a7e099b608057  left_retroauricular_crease/SRS024620.with_fasta.gff3.bz2
+```
+
+### All v all BLAST
+
+```
+bzcat *_aa.fasta.bz2 > all.aa.genes.fasta && python ~/scripts/removeShortContigs.py all.aa.genes.fasta all.aa.genes100.fasta 100
+formatdb -i all.aa.genes100.fasta -p T -n all.aa.genes100.fasta.blastDB
+blastp -query all.aa.genes100.fasta -db all.aa.genes100.fasta.blastDB -out allvall.aa.genes100.out -evalue 1e-5 -outfmt 6 -max_target_seqs 10000 -num_threads 8
+```
+
+### Map reads to genes
+
+Make bowtie database
+
+```
+bzcat *_nucleotide.fasta.bz2 > all.nucleotide.genes.fasta && python ~/scripts/removeShortContigs.py all.nucleotide.genes.fasta all.nucleotide.genes300.fasta 300
+
+bowtie-build all.nucleotide.genes300.fasta all.nucleotide.genes300.fasta.bowtieDB
+```
+
+Bowtie to map reads
+
+```
+#!/bin/bash
+set -e
+set -o pipefail
+READS=$1
+BASE=$(basename $READS .tar.bz2)
+
+bzcat $READS | tar -xvf -
+
+bowtie ../genes/all.nucleotide.genes300.fasta.bowtieDB -1 $BASE/$BASE.denovo_duplicates_marked.trimmed.1.fastq -2 $BASE/$BASE.denovo_duplicates_marked.trimmed.2.fastq -p 16 -S $BASE.pe.aligned2genes.sam
+
+samtools view -bS $BASE.pe.aligned2genes.sam > $BASE.pe.aligned2genes.bam
+rm $BASE.pe.aligned2genes.sam
+samtools sort $BASE.pe.aligned2genes.bam $BASE.pe.aligned2genes.sorted
+rm $BASE.pe.aligned2genes.bam
+
+samtools index $BASE.pe.aligned2genes.sorted.bam
+samtools idxstats $BASE.pe.aligned2genes.sorted.bam > $BASE.pe.mapped2genes.txt
+rm $BASE.pe.aligned2genes.sorted.bam
+
+
+bowtie ../genes/all.nucleotide.genes300.fasta.bowtieDB -q $BASE/$BASE.denovo_duplicates_marked.trimmed.singleton.fastq -p 16 -S $BASE.se.aligned2genes.sam
+
+samtools view -bS $BASE.se.aligned2genes.sam > $BASE.se.aligned2genes.bam
+rm $BASE.se.aligned2genes.sam
+samtools sort $BASE.se.aligned2genes.bam $BASE.se.aligned2genes.sorted
+rm $BASE.se.aligned2genes.bam
+
+samtools index $BASE.se.aligned2genes.sorted.bam
+samtools idxstats $BASE.se.aligned2genes.sorted.bam > $BASE.se.mapped2genes.txt
+rm $BASE.se.aligned2genes.sorted.bam
+
+rm -rf $BASE
+```
+
 =======================
 
 Download the data from the twin study the same way. The only difference is this is MG-RAST project 10 (mgp10)
