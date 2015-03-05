@@ -31,8 +31,6 @@ bzcat *_nucleotide.fasta.bz2 > all.nucleotide.genes.fasta && python ~/scripts/re
 bowtie-build all.nucleotide.genes300.fasta all.nucleotide.genes300.fasta.bowtieDB
 
 
-
-
 READS=$1
 BASE=$(basename $READS .tar.bz2)
 
