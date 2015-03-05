@@ -660,7 +660,8 @@ getMissingGenes.py kg.genes.count ../calledgenes/allvall.aa.genes100.out missing
 
 Cluster genes with mgcluster
 ```
-mothur '#mgcluster(blast=/mnt/EXT/Schloss-data/kiverson/hmp_kg/calledgenes/allvall.aa.genes100.out, count=/mnt/EXT/Schloss-data/kiverson/hmp_kg/cluster/kg.genes.ALL.count
+mothur '#mgcluster(blast=/mnt/EXT/Schloss-data/kiverson/hmp_saliva/genes/allvall.aa.genes100.out, count=saliva.ALL.genes.count)'
+mothur '#make.shared(count=saliva.ALL.genes.count, list=allvall.aa.genes100.an.unique_list.list)'
 ```
 
 =======================
