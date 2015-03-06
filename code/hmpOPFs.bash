@@ -2,21 +2,38 @@
 set -e
 set -o pipefail
 
-#set up directories
-mkdir kg
-mkdir saliva
-mkdir lrc
+#datasets
+DATASETS=(anterior_nares
+buccal_mucosa
+mid_vagina
+palatine_tonsils
+posterior_fornix
+right_retroauricular_crease
+subgingival_plaque
+supragingival_plaque
+throat
+tongue_dorsum
+vaginal_introitus)
+
+#removed datasets (done previosuly)
+#saliva
+#stool
+#attached_keratinized_gingiva
+#left_retroauricular_crease
+
+READS_LOC="ftp://public-ftp.hmpdacc.org/Illumina/"
+GENES_LOC="ftp://public-ftp.hmpdacc.org/HMGI/"
 
 
-#get reads
-wget ftp://public-ftp.hmpdacc.org/Illumina/attached_keratinized_gingiva/*
-wget ftp://public-ftp.hmpdacc.org/Illumina/saliva/*
-wget ftp://public-ftp.hmpdacc.org/Illumina/left_retroauricular_crease/*
+#parallelize this
+for i in ${DATASETS[*]};
+do
+	mkdir $i;
+	mkdir $i/cluster
 
-#get genes
-wget ftp://public-ftp.hmpdacc.org/HMGI/attached_keratinized_gingiva/*
-wget ftp://public-ftp.hmpdacc.org/HMGI/saliva/*
-wget ftp://public-ftp.hmpdacc.org/HMGI/left_retroauricular_crease/*
+	wget ${READS_LOC}${i}/* -P $i/rawreads
+	wget ${GENES_LOC}${i}/* -P $i/genes
+done;
 
 
 #everything past here is the same for all datasets
