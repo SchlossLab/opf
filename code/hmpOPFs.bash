@@ -24,6 +24,8 @@ vaginal_introitus)
 READS_LOC="ftp://public-ftp.hmpdacc.org/Illumina/"
 GENES_LOC="ftp://public-ftp.hmpdacc.org/HMGI/"
 
+BASE_DIR=pwd
+
 function fun_blast{
 	bzcat *_aa.fasta.bz2 > all.aa.genes.fasta && python ~/scripts/removeShortContigs.py all.aa.genes.fasta all.aa.genes100.fasta 100
 	formatdb -i all.aa.genes100.fasta -p T -n all.aa.genes100.fasta.blastDB
@@ -31,10 +33,13 @@ function fun_blast{
 
 }
 
-function fun_bowtie{
+function fun_bowtie_build{
 	bzcat *_nucleotide.fasta.bz2 > all.nucleotide.genes.fasta && python ~/scripts/removeShortContigs.py all.nucleotide.genes.fasta all.nucleotide.genes300.fasta 300
 
 	bowtie-build all.nucleotide.genes300.fasta all.nucleotide.genes300.fasta.bowtieDB
+}
+
+function fun_bowtie{
 
 	READS=$1
 	BASE=$(basename $READS .tar.bz2)
@@ -67,29 +72,34 @@ function fun_bowtie{
 	rm -rf $BASE
 }
 
+function fun_cluster{
+	DATASET=$1
+	python ../../opf/code/makecountfilefrombowtie.py -f ../genes/all.aa.genes100.fasta -o saliva.genes.count -l *.txt
+	getMissingGenes.py ${DATASET}.genes.count ../calledgenes/allvall.aa.genes100.out missingGenes.txt && cat ${DATASET}.genes.count missingGenes.txt > ${DATASET}.genes.ALL.count
+
+	mothur '#mgcluster(blast=genes/allvall.aa.genes100.out, count=${DATASET}.ALL.genes.count)'
+	mothur '#make.shared(count=${DATASET}.ALL.genes.count, list=allvall.aa.genes100.an.unique_list.list)'
+}
 
 #parallelize this
 for i in ${DATASETS[*]};
 do
 	mkdir $i;
-	mkdir $i/cluster
+	mkdir $i/cluster;
 
-	wget ${READS_LOC}${i}/* -P $i/rawreads
-	wget ${GENES_LOC}${i}/* -P $i/genes
+	wget ${READS_LOC}${i}/* -P $i/rawreads;
+	wget ${GENES_LOC}${i}/* -P $i/genes;
 
-	cd $i/rawreads
-	for f in *.tar.bz2
+	cd $BASE_DIR/$i/genes;
+	fun_blast;
+	fun_bowtie_build
+
+	cd $BASE_DIR/$i/rawreads;
+	for f in *.tar.bz2;
 	do
-		fun_bowtie
-	done
+		fun_bowtie $f;
+	done;
 
-	cd $i/genes
-	fun_blast
+	cd $BASE_DIR/$i/cluster;
+	fun_cluster;
 done;
-
-
-python ../../opf/code/makecountfilefrombowtie.py -f ../genes/all.aa.genes100.fasta -o saliva.genes.count -l *.txt
-getMissingGenes.py kg.genes.count ../calledgenes/allvall.aa.genes100.out missingGenes.txt && cat kg.genes.count missingGenes.txt > kg.genes.ALL.count
-
-mothur '#mgcluster(blast=/mnt/EXT/Schloss-data/kiverson/hmp_saliva/genes/allvall.aa.genes100.out, count=saliva.ALL.genes.count)'
-mothur '#make.shared(count=saliva.ALL.genes.count, list=allvall.aa.genes100.an.unique_list.list)'
