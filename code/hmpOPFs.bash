@@ -15,6 +15,12 @@ throat
 tongue_dorsum
 vaginal_introitus)
 
+DATASETS=(anterior_nares
+buccal_mucosa
+posterior_fornix
+supragingival_plaque
+tongue_dorsum)
+
 #removed datasets (done previosuly)
 #saliva
 #stool
