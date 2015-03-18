@@ -793,6 +793,25 @@ rm $BASE.se.aligned2genes.sorted.bam
 rm -rf $BASE
 ```
 
+
+## Posterior fornix
+
+## Map reads to genes
+
+Nonconforming datasets:
+
+```
+SRS019245
+SRS078182
+```
+
+Removed records:
+
+```
+
+```
+
+
 =======================
 
 Download the data from the twin study the same way. The only difference is this is MG-RAST project 10 (mgp10)
