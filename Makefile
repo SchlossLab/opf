@@ -22,11 +22,15 @@ GENES_LOC="ftp://public-ftp.hmpdacc.org/HMGI/"
 
 BASE_DIR=pwd
 
-get_genes:
-	wget ${GENES_LOC}${i}/* -P $i/genes
+get_genes: $(DATASETS)
+	wget ${GENES_LOC}$^/* -P $^/genes
 
-get_reads:
-	wget ${READS_LOC}${i}/* -P $i/rawreads
+get_reads: $(DATASETS)
+	wget ${READS_LOC}$^/* -P $^/rawreads
+
+check_sums:
+	wget sums.txt
+	
 
 bowtie_build:
 	bzcat *_nucleotide.fasta.bz2 > all.nucleotide.genes.fasta && python ~/scripts/removeShortContigs.py all.nucleotide.genes.fasta all.nucleotide.genes300.fasta 300
