@@ -811,6 +811,15 @@ Removed records:
 
 ```
 
+## Tongue dorsum
+
+Break up fasta file -- too long for bowtie-build
+
+```
+python ~/scripts/breakupfasta.py all.nucleotide.genes300.fasta 5000000
+```
+
+
 
 =======================
 
