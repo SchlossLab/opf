@@ -819,6 +819,17 @@ Break up fasta file -- too long for bowtie-build
 python ~/scripts/breakupfasta.py all.nucleotide.genes300.fasta 5000000
 ```
 
+KEGG BLAST using usearch
+
+```
+/mnt/EXT/Schloss-data/usearch6.0.307_i86linux64 -ublast all.aa.genes100.fasta -db /mnt/EXT/Schloss-data/dbs/KEGGdb/genes.pep.udb -evalue 1e-5 -blast6out all.aa.genes100vKEGG.b6
+```
+
+
+```
+cmd = "/mnt/EXT/Schloss-data/usearch6.0.307_i86linux64 -ublast {0}-gene-seqs.faa -db /mnt/EXT/Schloss-data/dbs/KEGGdb/genes.pep.udb -evalue 1e-5 -blast6out {0}vKEGG.b6".format(base[0])
+```
+
 
 
 =======================
