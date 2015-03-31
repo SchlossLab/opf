@@ -811,6 +811,31 @@ Removed records:
 
 ```
 
+bowtie -- multiple single end reads
+
+```
+#!/bin/bash
+set -e
+set -o pipefail
+READS=$1
+BASE=$(basename $READS .tar.bz2)
+
+cat $BASE/*.fastq > all.fastq
+
+bowtie ../genes/all.nucleotide.genes300.fasta.bowtieDB -q $BASE/all.fastq -p 16 -S $BASE.se.aligned2genes.sam
+
+samtools view -bS $BASE.se.aligned2genes.sam > $BASE.se.aligned2genes.bam
+rm $BASE.se.aligned2genes.sam
+samtools sort $BASE.se.aligned2genes.bam $BASE.se.aligned2genes.sorted
+rm $BASE.se.aligned2genes.bam
+
+samtools index $BASE.se.aligned2genes.sorted.bam
+samtools idxstats $BASE.se.aligned2genes.sorted.bam > $BASE.se.mapped2genes.txt
+rm $BASE.se.aligned2genes.sorted.bam
+
+rm -rf $BASE
+```
+
 ## Tongue dorsum
 
 Break up fasta file -- too long for bowtie-build
