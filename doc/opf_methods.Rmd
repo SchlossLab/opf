@@ -855,6 +855,21 @@ KEGG BLAST using usearch
 cmd = "/mnt/EXT/Schloss-data/usearch6.0.307_i86linux64 -ublast {0}-gene-seqs.faa -db /mnt/EXT/Schloss-data/dbs/KEGGdb/genes.pep.udb -evalue 1e-5 -blast6out {0}vKEGG.b6".format(base[0])
 ```
 
+## Buccal muscosa
+
+### remove bad reads
+
+Dataset SRS043422, removed reads:
+
+```
+awk '{if (length  >1024) {print NR} }' SRS043422.denovo_duplicates_marked.trimmed.2.fastq
+37907293
+37908751
+awk '{if (length  >1024) {print NR} }' SRS043422.denovo_duplicates_marked.trimmed.1.fastq
+37919045
+awk '{if (length  >1024) {print NR} }' SRS043422.denovo_duplicates_marked.trimmed.singleton.fastq
+6290160
+```
 
 
 =======================
