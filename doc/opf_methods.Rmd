@@ -871,6 +871,48 @@ awk '{if (length  >1024) {print NR} }' SRS043422.denovo_duplicates_marked.trimme
 6290160
 ```
 
+```
+19337  sed -i '37907291,37907294d;37908750,37908753d' SRS043422.denovo_duplicates_marked.trimmed.2.fastq
+19339  sed -i '37919043,37919046d' SRS043422.denovo_duplicates_marked.trimmed.1.fastq
+19341  sed -i '37907289,37907292d;37910933,37910936d' SRS043422.denovo_duplicates_marked.trimmed.1.fastq
+```
+
+```
+not a whole read 'set' just bad line
+sed -i '37907293d' SRS043422.denovo_duplicates_marked.trimmed.2.fastq
+
+bad records
+
+37908749 @61JEPAAXX100518:3:38:11773:1472/2 messed up sequence
+37908750 bad seq
+37908751 +61JEPAAXX100518:3:3:14756:8358/2
+37908752 GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGFGGEGGGGEGGGGGFEFFDAFDFGGDGBDDDEEBFBCFBDDE#
+
+61JEPAAXX100518:3:3:14756:8358 -> not in SRS043422.denovo_duplicates_marked.trimmed.1.fastq
+
+
+37919045 -> bad record
+
+sed -i '37919045,37919046d' SRS043422.denovo_duplicates_marked.trimmed.1.fastq
+
+remove records removed from 2
+sed -i '37910933,37910936d' SRS043422.denovo_duplicates_marked.trimmed.1.fastq
+```
+
+### Read mapping
+
+Bowtie
+
+### Separate by K0 category
+
+```
+python ../../../src/getfamkofromgene.py all.aa.genes100vKEGG.tophits.b6 ~/gene2ko.txt genes2ko.txt
+```
+
+### Make count file and split
+
+
+
 
 =======================
 
