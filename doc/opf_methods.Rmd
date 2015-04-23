@@ -927,6 +927,12 @@ zcat ../genes/allvall.aa.genes100.b6.gz | python ../../../src/parseblastko_strea
 
 ### Make count file and split
 
+```
+python /mnt/EXT/Schloss-data/kiverson/opf/code/getMissingGenes.py buccal_mucosa.genes.count ../genes/allvall.aa.genes100.b6 missingGenes.txt
+cat buccal_mucosa.genes.count missingGenes.txt > buccal_mucosa.ALL.genes.count
+python /mnt/EXT/Schloss-data/kiverson/src/makekocounts.py ../rawreads/buccal_mucosa.ALL.genes.count genes2ko.txt
+```
+
 
 
 
