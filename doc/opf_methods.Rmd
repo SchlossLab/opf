@@ -925,6 +925,14 @@ KOFILE=`cat kofiles_03 | tail -n +$PBS_ARRAYID | head -1`
 zcat ../genes/allvall.aa.genes100.b6.gz | python ../../../src/parseblastko_stream.py -c $KOFILE -b -
 ```
 
+### remove bad BLAST hit
+
+```
+awk '{if (length  >500) {print NR} }'  all.aa.genes100vKEGG.tophits.b6
+375140
+
+```
+
 ### Make count file and split
 
 ```
@@ -933,7 +941,21 @@ cat buccal_mucosa.genes.count missingGenes.txt > buccal_mucosa.ALL.genes.count
 python /mnt/EXT/Schloss-data/kiverson/src/makekocounts.py ../rawreads/buccal_mucosa.ALL.genes.count genes2ko.txt
 ```
 
+### Cluster
 
+```
+/mnt/EXT/Schloss-data/kiverson/Mothur.source.6/mothur '#mgcluster(blast={0}.genes.out, count={0}.genes.count)
+```
+
+Combine list files
+
+```
+cut -f3- all.lists > all.lists.levels
+awk '{ printf "%s\t", $0 }' all.lists.levels > all.lists.onelevel
+vim all.lists.onelevel
+??sed -i "1s/^/1\t$(awk '{sum+= $2} END {print sum}' all.lists)\t/" all.lists.onelevel
+quicksubmit "/mnt/EXT/Schloss-data/kiverson/Mothur.source.6/mothur '#make.shared(count=all.genes.count, list=all.lists.onelevel)'" --walltime 500:00:00 --cput 9999:00:00 --pm nodes=1:ppn=1,mem=30gb
+```
 
 
 =======================
