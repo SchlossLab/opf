@@ -916,6 +916,7 @@ Bowtie
 
 ```
 python ../../../src/getfamkofromgene.py all.aa.genes100vKEGG.tophits.b6 ~/gene2ko.txt genes2ko.txt
+python ../../splitbyko.py genes2ko.txt
 ```
 
 ### Parse BLAST file
