@@ -4,8 +4,8 @@ countfile = open(sys.argv[1], 'r')
 blastfile = open(sys.argv[2], 'r')
 outfile = open(sys.argv[3], 'w')
 
-counts = []
-blast = []
+counts = set()
+blast = set()
 
 for line in countfile:
     if line.startswith("R"):
@@ -14,7 +14,7 @@ for line in countfile:
     line = line.strip()
     line = line.split("\t")
     gene = line[0]
-    counts.append(gene)
+    counts.add(gene)
 
 countfile.close()
 
@@ -22,11 +22,11 @@ for line in blastfile:
     line = line.strip()
     line = line.split("\t")
     gene = line[0]
-    blast.append(gene)
-    blast.append(line[1])
+    blast.add(gene)
+    blast.add(line[1])
 
 blastfile.close()
 zeros = [0]*nGroups
-for gene in set(blast) ^ set(counts):
+for gene in blast ^ counts:
     outfile.write("%s\t%s\n" % (gene, '\t'.join(map(str, zeros)) ) )
     #outfile.write("%s\t0\t0\t0\n" % gene )
