@@ -951,6 +951,10 @@ python /mnt/EXT/Schloss-data/kiverson/src/makekocounts.py ../rawreads/buccal_muc
 Combine list files
 
 ```
+for i in *.list; do tail -1 \$i | cut -f3- | awk '{ printf "%s\t", $0 }' >> all.lists.onelevel; done;
+
+
+for i in *.list; do tail -1 \$i >> all.lists
 cut -f3- all.lists > all.lists.levels
 awk '{ printf "%s\t", $0 }' all.lists.levels > all.lists.onelevel
 vim all.lists.onelevel
