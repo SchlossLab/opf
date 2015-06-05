@@ -864,6 +864,22 @@ KEGG BLAST using usearch
 cmd = "/mnt/EXT/Schloss-data/usearch6.0.307_i86linux64 -ublast {0}-gene-seqs.faa -db /mnt/EXT/Schloss-data/dbs/KEGGdb/genes.pep.udb -evalue 1e-5 -blast6out {0}vKEGG.b6".format(base[0])
 ```
 
+de-replicate with cdhit
+
+make new count file
+
+```
+python ../../../src/parsCD-HITclusters.py allHMP.cdhit.out.clstr > clusters.txt
+python ../../src/makecountbowtiecluster2.py ../data/HMGI-stool-gene-seqs/clusters.txt hmp2.counts *idxstats.txt
+```
+
+```
+python ../../../src/parsCD-HITclusters.py all.aa.genes100.fasta.cdhit.out.clstr > clusters.txt
+python ../../../src/makecountbowtiecluster2.py ../genes/clusters.txt supragingival_plaque.count SRS*.mapped2genes.txt
+```
+
+
+
 ## Buccal mucosa
 
 ### remove bad reads
