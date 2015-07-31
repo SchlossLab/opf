@@ -878,6 +878,25 @@ python ../../../src/parsCD-HITclusters.py all.aa.genes100.fasta.cdhit.out.clstr 
 python ../../../src/makecountbowtiecluster2.py ../genes/clusters.txt supragingival_plaque.count SRS*.mapped2genes.txt
 ```
 
+cat all the count files from the split
+
+```
+kiverson@axiom rawreads $ sed -i '1d' outfile12000000.cdhit.count
+kiverson@axiom rawreads $ sed -i '1d' outfile4000000.cdhit.count
+kiverson@axiom rawreads $ sed -i '1d' outfile8000000.cdhit.count
+kiverson@axiom rawreads $ cat outfile0.cdhit.count outfile4000000.cdhit.count outfile8000000.cdhit.count outfile12000000.cdhit.count > tongue_dorsum.genes.cdhit.count
+```
+
+### clustering with cd-hit
+
+```
+14427376 genes >= 100 aa
+11997653 genes with hits to KEGG
+5931065 clusters
+14427376 genes in clusters
+```
+
+
 
 
 ## Buccal mucosa
