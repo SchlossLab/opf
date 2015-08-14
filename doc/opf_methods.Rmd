@@ -894,6 +894,7 @@ kiverson@axiom rawreads $ cat outfile0.cdhit.count outfile4000000.cdhit.count ou
 11997653 genes with hits to KEGG
 5931065 clusters
 14427376 genes in clusters
+2429723 genes with no top hit in KEGG
 ```
 
 
