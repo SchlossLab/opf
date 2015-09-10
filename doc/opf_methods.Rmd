@@ -962,6 +962,8 @@ KOFILE=`cat kofiles_03 | tail -n +$PBS_ARRAYID | head -1`
 zcat ../genes/allvall.aa.genes100.b6.gz | python ../../../src/parseblastko_stream.py -c $KOFILE -b -
 ```
 
+Parse blast probably will give `cat: write error: Broken pipe` because the script quits as soon as all the genes for that ko have been found but there are still more lines in the blast file to read.
+
 ### remove bad BLAST hit
 
 ```
