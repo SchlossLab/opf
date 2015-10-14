@@ -875,6 +875,10 @@ python ../../src/makecountbowtiecluster2.py ../data/HMGI-stool-gene-seqs/cluster
 
 ```
 python ../../../src/parsCD-HITclusters.py all.aa.genes100.fasta.cdhit.out.clstr > clusters.txt
+
+python ../makecountbowtiecluster4.py clusters.txt tongue_dorsum_4.count SRS*.mapped2genes.txt
+
+
 python ../../../src/makecountbowtiecluster2.py ../genes/clusters.txt supragingival_plaque.count SRS*.mapped2genes.txt
 ```
 
